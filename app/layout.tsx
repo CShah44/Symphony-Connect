@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import localFont from "next/font/local";
 import { FloatingNav } from "@/components/ui/floating-navbar";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,21 +26,6 @@ export const metadata: Metadata = {
   },
 };
 
-const navItems = [
-  {
-    name: "Home",
-    link: "/",
-  },
-  {
-    name: "Feed",
-    link: "/feed",
-  },
-  {
-    name: "Profile",
-    link: "/profile",
-  },
-];
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -51,8 +37,14 @@ export default function RootLayout({
         <body
           className={`${melodrama.variable} ${agrandir.variable} ${inter.className} bg-zinc-900 text-white`}
         >
-          <FloatingNav />
-          {children}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            disableTransitionOnChange
+          >
+            <FloatingNav />
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

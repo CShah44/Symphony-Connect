@@ -6,6 +6,7 @@ const publicRoutes = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/api/webhooks/(.*)",
+  "/api/uploadthing",
 ]);
 
 const adminRoutes = createRouteMatcher(["/dashboard(.*)"]);
@@ -13,10 +14,10 @@ const adminRoutes = createRouteMatcher(["/dashboard(.*)"]);
 export default clerkMiddleware((auth, req) => {
   if (!publicRoutes(req)) auth().protect();
 
-  const { sessionClaims }: any = auth();
+  // const { sessionClaims }: any = auth();
 
-  if (adminRoutes(req) && sessionClaims?.public_metadata.role !== "admin")
-    auth().protect();
+  // if (adminRoutes(req) && sessionClaims?.public_metadata.role !== "admin")
+  //   auth().protect();
 });
 
 export const config = {
