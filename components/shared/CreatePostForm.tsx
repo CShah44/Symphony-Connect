@@ -10,7 +10,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -24,8 +23,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Textarea } from "../ui/textarea";
-import { useState } from "react";
 import FileUploader from "./FileUploader";
+import { useUser } from "@clerk/nextjs";
 
 const createPostSchema = z.object({
   text: z
@@ -36,7 +35,7 @@ const createPostSchema = z.object({
 });
 
 const CreatePostForm = () => {
-  const [files, setFiles] = useState<any[]>([]);
+  const { user } = useUser();
 
   const form = useForm<z.infer<typeof createPostSchema>>({
     resolver: zodResolver(createPostSchema),
@@ -48,14 +47,15 @@ const CreatePostForm = () => {
   function onSubmit(values: z.infer<typeof createPostSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(files);
     console.log(values);
   }
 
   return (
     <Dialog>
-      <DialogTrigger className="fixed right-3 bottom-3">Open</DialogTrigger>
-      <DialogContent className="font-agrandir">
+      <DialogTrigger className="rounded-full fixed w-16 h-16 drop-shadow-lg shadow-yellow-100 right-3 bottom-3 text-slate-800 bg-neutral-200 hover:bg-neutral-400">
+        Create
+      </DialogTrigger>
+      <DialogContent className="font-agrandir bg-zinc-900">
         <DialogHeader>
           <DialogTitle>Create Post</DialogTitle>
           <DialogDescription>
@@ -65,13 +65,15 @@ const CreatePostForm = () => {
         {/* todo add form here */}
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="bg-zinc-900">
             <FormField
               control={form.control}
               name="text"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>What's on your mind?</FormLabel>
+                  <FormLabel>
+                    What's on your mind{`, ${user?.firstName}`}?
+                  </FormLabel>
                   <FormControl>
                     <Textarea {...field} />
                   </FormControl>
@@ -81,8 +83,11 @@ const CreatePostForm = () => {
               )}
             />
             <FileUploader />
-            <Button variant={"outline"} type="submit">
-              Submit
+            <FormDescription>
+              Make sure to click upload before you post
+            </FormDescription>
+            <Button variant={"outline"} type="submit" className="my-3">
+              Post
             </Button>
           </form>
         </Form>

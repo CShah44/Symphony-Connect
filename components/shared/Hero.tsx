@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import React from "react";
 import { AuroraBackground } from "../ui/aurora-background";
 import Link from "next/link";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 export default function Hero() {
   return (
@@ -32,11 +33,27 @@ export default function Hero() {
         <div className="font-extralight md:text-4xl text-neutral-200 py-4">
           The music community you've been looking for
         </div>
-        <Link href="/sign-in">
-          <button className="bg-neutral-200 hover:bg-neutral-400 rounded-full w-20 text-black px-4 py-2">
-            Join
-          </button>
-        </Link>
+        <div className="flex gap-4">
+          <SignedIn>
+            <Link href="/feed">
+              <button className="bg-neutral-200 hover:bg-neutral-400 rounded-full w-[200px] text-black px-4 py-2">
+                Go to your feed
+              </button>
+            </Link>
+          </SignedIn>
+          <SignedOut>
+            <Link href="/sign-in">
+              <button className="bg-neutral-200 hover:bg-neutral-400 rounded-full w-[100px] text-black px-4 py-2">
+                Sign-In
+              </button>
+            </Link>
+            <Link href="/sign-up">
+              <button className="bg-neutral-200 hover:bg-neutral-400 rounded-full w-[100px] text-black px-4 py-2">
+                Sign-Up
+              </button>
+            </Link>
+          </SignedOut>
+        </div>
       </motion.div>
     </AuroraBackground>
   );
