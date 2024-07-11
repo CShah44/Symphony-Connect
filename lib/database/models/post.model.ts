@@ -16,6 +16,26 @@ export interface IPost extends Document {
   createdAt?: Date;
   updatedAt?: Date;
 }
+export interface IPostFeed extends Document {
+  _id: string;
+  postedBy: {
+    _id: string;
+    username: string;
+    photo: string;
+  }; // ObjectId, reference to User
+  type: "Opportunity" | "Event" | "Post";
+  text: string;
+  imageUrls: string[];
+  tags: string[];
+  likes: string[]; // ObjectId, reference to User
+  comments: IComment[];
+  repost?: {
+    originalPostedBy: string; // ObjectId, reference to User
+    originalPostId: string; // ObjectId, reference to Post
+  };
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 interface IComment {
   userId: string; // ObjectId, reference to User

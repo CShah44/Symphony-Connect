@@ -52,15 +52,11 @@ export const FloatingNav = ({ className }: { className?: string }) => {
     }
   });
 
-  const pathname = usePathname();
+  const p = usePathname();
 
   useEffect(() => {
     setVisible(true);
-  }, []);
-
-  useEffect(() => {
-    setVisible(true);
-  }, [pathname]);
+  }, [p]);
 
   return (
     <AnimatePresence mode="wait">

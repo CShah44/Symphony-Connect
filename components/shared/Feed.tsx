@@ -1,31 +1,22 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Post from "./Post";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { IPost, IPostFeed } from "@/lib/database/models/post.model";
+import { getPosts } from "@/lib/actions/post.action";
 
 const FeedContainer = () => {
-  const posts = [
-    {
-      id: 1,
-      username: "John Doe",
-      profilePicture: "https://via.placeholder.com/50",
-      postText: "This is my first post!",
-      postImage: "https://via.placeholder.com/500",
-      likes: 10,
-      comments: 2,
-      type: "Oppurtunity",
-      tags: ["arijit", "bollywood"],
-    },
-    {
-      id: 2,
-      username: "Jane Smith",
-      profilePicture: "https://via.placeholder.com/50",
-      postText: "I'm so excited for the weekend!",
-      postImage: "https://via.placeholder.com/500",
-      likes: 20,
-      comments: 5,
-      type: "Post",
-      tags: ["hollywood", "dua lipa"],
-    },
-  ];
+  const [posts, setPosts] = useState<IPostFeed[]>([]);
+
+  useEffect(() => {
+    async function getAllPosts() {
+      const res = await getPosts();
+      setPosts([...res]);
+    }
+
+    getAllPosts();
+  }, []);
 
   const tabs = ["All", "Post", "Oppurtunity", "Event"];
 
@@ -47,7 +38,7 @@ const FeedContainer = () => {
           return (
             <TabsContent className="gap-5 flex flex-col" key={t} value={t}>
               {filteredPosts.map((post) => (
-                <Post key={post.id} post={post} />
+                <Post key={post._id} post={post} />
               ))}
             </TabsContent>
           );

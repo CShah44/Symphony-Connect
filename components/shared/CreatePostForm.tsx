@@ -11,15 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -138,7 +129,7 @@ const CreatePostForm = () => {
           type="submit"
           className="my-3"
         >
-          {form.formState.isSubmitted ? "Posting..." : "Post"}
+          {form.formState.isSubmitting ? "Posting..." : "Post"}
         </Button>
       </form>
     </Form>

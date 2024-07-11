@@ -22,7 +22,6 @@ export const connect = async () => {
   }
 
   if (!MONGODB_URI) {
-    console.log(MONGODB_URI);
     throw new Error("MONGODB_URI is missing.");
   }
 
