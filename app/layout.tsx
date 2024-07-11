@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import localFont from "next/font/local";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,6 +45,7 @@ export default function RootLayout({
           >
             <FloatingNav />
             {children}
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>

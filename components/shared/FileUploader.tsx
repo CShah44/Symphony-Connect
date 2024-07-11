@@ -1,12 +1,15 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { UploadDropzone } from "@/lib/utils";
 import Image from "next/image";
 
-export default function FileUploader() {
-  const [imageUrls, setImageUrls] = useState([]);
-  // const [files, setFiles] = useState([]); // use this to upload as
-
+export default function FileUploader({
+  imageUrls,
+  setImageUrls,
+}: {
+  imageUrls: Array<String>;
+  setImageUrls: Dispatch<SetStateAction<String[]>>;
+}) {
   function handleRemoveImage(indexToRemove: number) {
     const updatedImages = imageUrls.filter(
       (item, index) => index !== indexToRemove
@@ -42,8 +45,6 @@ export default function FileUploader() {
         <UploadDropzone
           endpoint="imageUploader"
           onClientUploadComplete={(res: any) => {
-            // Do something with the response
-            console.log("Files: ", res);
             const urls = res?.map((file: any) => file.url);
             setImageUrls(urls);
             alert("Upload Completed");
