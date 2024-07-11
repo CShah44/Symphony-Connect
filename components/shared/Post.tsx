@@ -23,7 +23,6 @@ import { IPostFeed } from "@/lib/database/models/post.model";
 //todo change the any here bro
 const Post = ({ post }: { post: IPostFeed }) => {
   const p = post;
-
   return (
     <Card className="text-left w-full h-auto">
       <CardHeader>
@@ -51,15 +50,14 @@ const Post = ({ post }: { post: IPostFeed }) => {
           <Carousel className="w-full mx-auto">
             <CarouselContent>
               {p?.imageUrls.map((url: string) => (
-                <CarouselItem key={`url=${url}`}>
+                <CarouselItem key={url}>
                   <div className="p-1">
                     <Card>
                       <CardContent className="flex aspect-video items-center justify-center p-6">
-                        <Image
-                          src="/logo.png"
-                          alt=""
-                          fill
-                          objectFit="contain"
+                        <img
+                          src={url}
+                          alt={url}
+                          className="object-contain h-full w-full"
                         />
                       </CardContent>
                     </Card>

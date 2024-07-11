@@ -1,6 +1,6 @@
 import { UserProfile } from "@clerk/nextjs";
 
-const Profile = () => {
+const Settings = () => {
   return (
     <div className="flex w-full h-full items-center justify-center my-[150px]">
       <UserProfile />
@@ -8,4 +8,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Settings;

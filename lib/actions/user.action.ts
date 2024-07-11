@@ -44,6 +44,29 @@ export async function updateUser(clerkId: string, user: any) {
   }
 }
 
+export async function updateMusicProfile(data: {
+  genres: string[];
+  instruments: string[];
+  skills: string[];
+  favoriteArtists: string[];
+  bio: string;
+  userId: any;
+}) {
+  try {
+    const user = await User.findById(data.userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await user.save();
+
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function deleteUser(clerkId: string) {
   try {
     await connect();
@@ -62,5 +85,35 @@ export async function deleteUser(clerkId: string) {
     return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;
   } catch (error) {
     throw new Error("Could not delete the user in database");
+  }
+}
+
+// todo check
+export async function followUnfollow(userId: string, userTarget: string) {
+  try {
+    await connect();
+    const user = await User.findById(userId);
+    const userTargetData = await User.findById(userTarget);
+
+    const index = userTargetData.following.findIndex(
+      (id: string) => id === userId
+    );
+
+    if (index === -1) {
+      user.following.push(userTarget);
+      userTargetData.followers.push(userId);
+    } else {
+      user.following = user.following.filter((id: string) => id !== userTarget);
+      userTargetData.followers = userTargetData.followers.filter(
+        (id: string) => id !== userId
+      );
+    }
+    await user.save();
+    await userTargetData.save();
+    return JSON.parse(
+      JSON.stringify({ message: "Followed/Unfollowed successfully" })
+    );
+  } catch (error) {
+    throw new Error("Could not follow/unfollow the user!");
   }
 }

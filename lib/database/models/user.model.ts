@@ -6,6 +6,7 @@ export interface IUser extends Document {
   genres: string[];
   skills: string[];
   instruments: string[];
+  favoriteArtists: string[];
   role: string;
   clerkId: string;
   firstName: string;
@@ -13,6 +14,7 @@ export interface IUser extends Document {
   email: string;
   photo: string;
   username: string;
+  bio: string;
 }
 
 const userSchema: Schema = new Schema(
@@ -23,14 +25,14 @@ const userSchema: Schema = new Schema(
     email: { type: String, required: true, unique: true },
     followers: [{ type: Schema.Types.ObjectId, ref: "User", default: [] }],
     following: [{ type: Schema.Types.ObjectId, ref: "User", default: [] }],
-    genres: [{ type: Schema.Types.ObjectId, ref: "Genre", default: [] }],
-    skills: [{ type: Schema.Types.ObjectId, ref: "Skill", default: [] }],
-    instruments: [
-      { type: Schema.Types.ObjectId, ref: "Instrument", default: [] },
-    ],
+    genres: [String],
+    instruments: [String],
+    skills: [String],
+    favoriteArtists: [String],
     role: { type: String, enum: ["admin", "user"], default: "user" },
     photo: { type: String, default: "" },
     username: { type: String, default: "" },
+    bio: { type: String, default: "" },
   },
   { timestamps: true }
 );

@@ -3,7 +3,7 @@
 
 import { connect } from "../database";
 import Post, { IPost } from "../database/models/post.model";
-import User from "../database/models/user.model";
+import User, { IUser } from "../database/models/user.model";
 
 export async function createPost(post: {
   text: string;
@@ -61,5 +61,74 @@ export async function deletePostById(postId: string) {
     return JSON.parse(JSON.stringify({ message: "Post deleted successfully" }));
   } catch (error) {
     throw new Error("Could not delete the post!");
+  }
+}
+
+export async function likeUnlike(postId: string, userId: string) {
+  try {
+    await connect();
+
+    const post = await Post.findById(postId);
+    const index = post.likes.findIndex((id: string) => id === userId);
+    if (index === -1) {
+      post.likes.push(userId);
+    } else {
+      post.likes = post.likes.filter((id: string) => id !== userId);
+    }
+    await post.save();
+    return JSON.parse(JSON.stringify(post));
+  } catch (error) {
+    throw new Error("Could not like/unlike the post!");
+  }
+}
+
+export async function addComment(postId: string, userId: string, text: string) {
+  try {
+    await connect();
+    const post = await Post.findById(postId);
+    const user: IUser | null = await User.findById(userId);
+
+    if (!post || !user) {
+      throw new Error("Could not find the post or user");
+    }
+
+    const comment = {
+      text,
+      userId: user._id,
+      userProfilePic: user.photo,
+    };
+
+    post.comments.push(comment);
+
+    await post.save();
+    return JSON.parse(JSON.stringify(post));
+  } catch (error) {
+    throw new Error("Could not add comment to the post!");
+  }
+}
+
+export async function repost(postId: string, repostedBy_UserId: string) {
+  try {
+    await connect();
+    const ogPost: IPost | null = await Post.findById(postId);
+    const repostedBy = await User.findById(repostedBy_UserId);
+    if (!ogPost || !repostedBy) {
+      throw new Error("Could not find the post or user");
+    }
+
+    const newPost: IPost | null = await Post.create({
+      ...ogPost,
+      postedBy: repostedBy_UserId,
+      comments: [],
+      likes: [],
+      repost: {
+        originalPostedBy: ogPost.postedBy,
+        originalPostId: ogPost._id,
+      },
+    });
+
+    return JSON.parse(JSON.stringify(newPost));
+  } catch (error) {
+    throw new Error("Could not repost the post!");
   }
 }

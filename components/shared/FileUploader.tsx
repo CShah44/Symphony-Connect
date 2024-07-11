@@ -2,14 +2,17 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { UploadDropzone } from "@/lib/utils";
 import Image from "next/image";
+import { useToast } from "../ui/use-toast";
 
 export default function FileUploader({
   imageUrls,
   setImageUrls,
 }: {
-  imageUrls: Array<String>;
-  setImageUrls: Dispatch<SetStateAction<String[]>>;
+  imageUrls: Array<string>;
+  setImageUrls: Dispatch<SetStateAction<string[]>>;
 }) {
+  const { toast } = useToast();
+
   function handleRemoveImage(indexToRemove: number) {
     const updatedImages = imageUrls.filter(
       (item, index) => index !== indexToRemove
@@ -47,11 +50,16 @@ export default function FileUploader({
           onClientUploadComplete={(res: any) => {
             const urls = res?.map((file: any) => file.url);
             setImageUrls(urls);
-            alert("Upload Completed");
+            toast({
+              title: "Images Uploaded!",
+            });
           }}
           onUploadError={(error: Error) => {
-            // Do something with the error.
-            alert(`Could not upload that image. Check File Size again.`);
+            toast({
+              title: "Error uploading images",
+              description: "Couldn't upload images, check the file size once",
+              variant: "destructive",
+            });
           }}
         />
       )}

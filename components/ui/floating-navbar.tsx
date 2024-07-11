@@ -16,11 +16,13 @@ import {
   SignOutButton,
   SignUpButton,
   UserButton,
+  useUser,
 } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 
 export const FloatingNav = ({ className }: { className?: string }) => {
-  const { scrollYProgress } = useScroll();
+  const { scrollYProgress, scrollY } = useScroll();
+  const { user } = useUser();
 
   const navItems = [
     {
@@ -33,7 +35,7 @@ export const FloatingNav = ({ className }: { className?: string }) => {
     },
     {
       name: "Profile",
-      link: "/profile",
+      link: `/user/${user?.publicMetadata.userId}`,
     },
   ];
 
@@ -60,7 +62,7 @@ export const FloatingNav = ({ className }: { className?: string }) => {
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <motion.nav
         initial={{
           opacity: 1,
           y: -100,
@@ -106,7 +108,7 @@ export const FloatingNav = ({ className }: { className?: string }) => {
             <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
           </div>
         </SignedIn>
-      </motion.div>
+      </motion.nav>
     </AnimatePresence>
   );
 };

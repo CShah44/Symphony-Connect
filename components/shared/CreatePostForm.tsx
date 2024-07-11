@@ -38,7 +38,7 @@ const createPostSchema = z.object({
 
 const CreatePostForm = () => {
   const { user } = useUser();
-  const [imageUrls, setImageUrls] = useState<String[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof createPostSchema>>({
@@ -61,6 +61,7 @@ const CreatePostForm = () => {
       });
 
       form.reset();
+      setImageUrls([]);
 
       toast({
         title: "POSTED!!!",
