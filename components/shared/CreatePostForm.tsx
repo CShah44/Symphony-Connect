@@ -66,7 +66,7 @@ const CreatePostForm = () => {
         text: values.text,
         type: values.type,
         imageUrls: imageUrls,
-        id: user.publicMetadata.userId,
+        id: user?.publicMetadata?.userId,
       });
 
       form.reset();
@@ -77,7 +77,7 @@ const CreatePostForm = () => {
       });
     } catch (error) {
       console.log(error);
-      toast({
+      return toast({
         title: "Oops!",
         description: "Could not post! Try again later.",
         variant: "destructive",
@@ -86,86 +86,62 @@ const CreatePostForm = () => {
   }
 
   return (
-    <Dialog>
-      <DialogTrigger className="rounded-full fixed w-16 h-16 drop-shadow-lg shadow-yellow-100 right-3 bottom-3 text-slate-800 bg-neutral-200 hover:bg-neutral-400">
-        Create
-      </DialogTrigger>
-      <DialogContent className="font-agrandir bg-zinc-900">
-        <DialogHeader>
-          <DialogTitle>Create Post</DialogTitle>
-          <DialogDescription>
-            Create a new post or post an oppurtunity
-          </DialogDescription>
-        </DialogHeader>
-        {/* todo add form here */}
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="bg-zinc-900">
-            <FormField
-              control={form.control}
-              name="text"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    What's on your mind{`, ${user?.firstName}`}?
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                  <FormDescription>Let's see your creativity</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FileUploader imageUrls={imageUrls} setImageUrls={setImageUrls} />
-            <FormDescription className="mb-4">
-              Make sure to click upload before you post
-            </FormDescription>
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Is this an event or oppurtunity?" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Post">Post</SelectItem>
-                      <SelectItem value="Event">Event</SelectItem>
-                      <SelectItem value="Oppurtunity">Oppurtunity</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>
-                    Let people know if you're posting an event or oppurtunity!
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              disabled={form.formState.isSubmitting}
-              variant={"outline"}
-              type="submit"
-              className="my-3"
-            >
-              {form.formState.isSubmitted ? "Posting..." : "Post"}
-            </Button>
-          </form>
-        </Form>
-
-        <DialogFooter>
-          {/* <Button variant={"destructive"}>
-          </Button> */}
-          <DialogTrigger>Cancel</DialogTrigger>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="bg-zinc-900">
+        <FormField
+          control={form.control}
+          name="text"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                What's on your mind{`, ${user?.firstName}`}?
+              </FormLabel>
+              <FormControl>
+                <Textarea {...field} />
+              </FormControl>
+              <FormDescription>Let's see your creativity</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FileUploader imageUrls={imageUrls} setImageUrls={setImageUrls} />
+        <FormDescription className="mb-4">
+          Make sure to click upload before you post
+        </FormDescription>
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Is this an event or oppurtunity?" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="Post">Post</SelectItem>
+                  <SelectItem value="Event">Event</SelectItem>
+                  <SelectItem value="Oppurtunity">Oppurtunity</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                Let people know if you're posting an event or oppurtunity!
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          disabled={form.formState.isSubmitting}
+          variant={"outline"}
+          type="submit"
+          className="my-3"
+        >
+          {form.formState.isSubmitted ? "Posting..." : "Post"}
+        </Button>
+      </form>
+    </Form>
   );
 };
 

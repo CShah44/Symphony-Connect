@@ -7,7 +7,7 @@ export async function createPost(post: {
   text: string;
   type: String;
   imageUrls: String[];
-  id: String;
+  id: any;
 }) {
   try {
     await connect();

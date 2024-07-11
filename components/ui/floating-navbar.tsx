@@ -20,7 +20,7 @@ import {
 import { usePathname } from "next/navigation";
 
 export const FloatingNav = ({ className }: { className?: string }) => {
-  const { scrollYProgress, scrollY } = useScroll();
+  const { scrollYProgress } = useScroll();
 
   const navItems = [
     {
