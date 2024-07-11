@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { updateMusicProfile } from "@/lib/actions/user.action";
+import { useRouter } from "next/navigation";
 
 const EditMusicProfileSchema = z.object({
   genres: z.array(z.string()),
@@ -47,6 +48,7 @@ const EditProfile = () => {
     bio: "I don't know! I just crashed here!",
   });
   const { user } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
     const preloadData = async () => {
@@ -80,7 +82,9 @@ const EditProfile = () => {
       toast({
         title: "Profile updated successfully",
       });
+      router.push(`/user/${user?.publicMetadata?.userId}`);
     } catch (error) {
+      console.log(error);
       toast({
         title: "Error updating profile",
         description: "Something went wrong, please try again later",

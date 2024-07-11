@@ -47,19 +47,19 @@ const ProfileCard = ({ id }: { id: string }) => {
           <CardDescription>{user.username}</CardDescription>
         </div>
       </CardHeader>
-      <CardContent>
-        {user.bio || ""}
-        <div id="instruments">
+      <CardContent className="flex flex-col gap-3">
+        <p className="mb-3">{user.bio || ""}</p>
+        <div id="instruments" className="flex flex-wrap gap-3">
           {user?.instruments.map((instrument, index) => (
             <Badge key={index}>{instrument}</Badge>
           ))}
         </div>
-        <div id="skills">
+        <div id="skills" className="flex flex-wrap gap-3">
           {user?.skills.map((skill, index) => (
             <Badge key={index}>{skill}</Badge>
           ))}
         </div>
-        <div id="genres">
+        <div id="genres" className="flex flex-wrap gap-3">
           {user?.genres.map((genre, index) => (
             <Badge key={index}>{genre}</Badge>
           ))}

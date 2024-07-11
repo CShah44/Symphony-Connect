@@ -53,12 +53,20 @@ export async function updateMusicProfile(data: {
   userId: any;
 }) {
   try {
-    const user = await User.findById(data.userId);
+    const user = await User.findByIdAndUpdate(
+      data.userId,
+      {
+        genres: data.genres,
+        instruments: data.instruments,
+        skills: data.skills,
+        favoriteArtists: data.favoriteArtists,
+        bio: data.bio,
+      },
+      { new: true }
+    );
     if (!user) {
       throw new Error("User not found");
     }
-
-    await user.save();
 
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
