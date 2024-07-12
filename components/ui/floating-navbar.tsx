@@ -26,10 +26,6 @@ export const FloatingNav = ({ className }: { className?: string }) => {
 
   const navItems = [
     {
-      name: "Home",
-      link: "/",
-    },
-    {
       name: "Feed",
       link: "/feed",
     },
@@ -101,10 +97,11 @@ export const FloatingNav = ({ className }: { className?: string }) => {
             <DropdownMenuContent className="font-agrandir z-[1001]">
               <DropdownMenuLabel>Go to</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Home</DropdownMenuItem>
-              <DropdownMenuItem>Discover People</DropdownMenuItem>
-              <DropdownMenuItem>Feed</DropdownMenuItem>
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              {navItems.map((navItem: any, idx: number) => (
+                <DropdownMenuItem key={`link=${idx}`}>
+                  <Link href={navItem.link}>{navItem.name}</Link>
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

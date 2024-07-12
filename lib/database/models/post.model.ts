@@ -16,6 +16,7 @@ export interface IPost extends Document {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
 export interface IPostFeed extends Document {
   _id: string;
   postedBy: {
@@ -30,7 +31,11 @@ export interface IPostFeed extends Document {
   likes: string[]; // ObjectId, reference to User
   comments: IComment[];
   repost?: {
-    originalPostedBy: string; // ObjectId, reference to User
+    originalPostedBy: {
+      _id: string;
+      username: string;
+      photo: string;
+    }; //reference to User
     originalPostId: string; // ObjectId, reference to Post
   };
   createdAt?: Date;
@@ -44,6 +49,7 @@ export interface IComment {
   userProfilePic: string;
 }
 
+// todo store only id of user in comment
 const postSchema = new Schema(
   {
     postedBy: {

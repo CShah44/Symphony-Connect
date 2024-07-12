@@ -101,7 +101,9 @@ const ProfileCard = ({ id }: { id: string }) => {
               <CardTitle>
                 {user.firstName} {user.lastName}
               </CardTitle>
-              <CardDescription>{user.username}</CardDescription>
+              <CardDescription className="text-md">
+                {user.username}
+              </CardDescription>
             </div>
             {isCurrentUserReqUser && (
               <DropdownMenu>

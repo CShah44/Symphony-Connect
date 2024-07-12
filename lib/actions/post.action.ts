@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { connect } from "../database";
 import Post, { IPost } from "../database/models/post.model";
 import User, { IUser } from "../database/models/user.model";
-import { redirect } from "next/navigation";
+import { text } from "node:stream/consumers";
 
 export async function createPost(post: {
   text: string;
@@ -24,7 +24,6 @@ export async function createPost(post: {
     });
 
     revalidatePath("/feed");
-    redirect("/feed");
     return JSON.parse(JSON.stringify(newPost));
   } catch (error) {
     console.log(error);
@@ -35,11 +34,18 @@ export async function createPost(post: {
 export async function getPosts() {
   try {
     await connect();
-    const posts = await Post.find().populate({
-      path: "postedBy",
-      model: User,
-      select: "photo username",
-    });
+    const posts = await Post.find()
+      .populate({
+        path: "postedBy",
+        model: User,
+        select: "photo username",
+      })
+      .populate({
+        path: "repost.originalPostedBy",
+        model: User,
+        select: "photo username",
+      })
+      .sort({ createdAt: -1 });
 
     return JSON.parse(JSON.stringify(posts));
   } catch (error) {
@@ -51,7 +57,17 @@ export async function getPosts() {
 export async function getPostById(id: string) {
   try {
     await connect();
-    const post = await Post.findById(id);
+    const post = await Post.findById(id)
+      .populate({
+        path: "postedBy",
+        model: User,
+        select: "photo username",
+      })
+      .populate({
+        path: "repost.originalPostedBy",
+        model: User,
+        select: "photo username",
+      });
     return JSON.parse(JSON.stringify(post));
   } catch (error) {
     throw new Error("Could not fetch the post!");
@@ -96,11 +112,19 @@ export async function likeUnlike(postId: string, userId: any, path: string) {
 export async function getUserPosts(userId: any) {
   try {
     await connect();
-    const posts = await Post.find({ postedBy: userId }).populate({
-      path: "postedBy",
-      model: User,
-      select: "photo username",
-    });
+    const posts = await Post.find({ postedBy: userId })
+      .populate({
+        path: "postedBy",
+        model: User,
+        select: "photo username",
+      })
+      .populate({
+        path: "repost.originalPostedBy",
+        model: User,
+        select: "photo username",
+      })
+      .sort({ createdAt: -1 });
+
     return JSON.parse(JSON.stringify(posts));
   } catch (error) {
     throw new Error("Could not fetch the posts!");
@@ -141,8 +165,11 @@ export async function addComment({
   }
 }
 
-export async function repost(postId: string, repostedBy_UserId: string) {
+export async function repost(postId: string, repostedBy_UserId: any) {
   try {
+    if (!repostedBy_UserId || !postId)
+      throw new Error("Required parameters missing");
+
     await connect();
     const ogPost: IPost | null = await Post.findById(postId);
     const repostedBy = await User.findById(repostedBy_UserId);
@@ -151,7 +178,9 @@ export async function repost(postId: string, repostedBy_UserId: string) {
     }
 
     const newPost: IPost | null = await Post.create({
-      ...ogPost,
+      text: ogPost.text,
+      imageUrls: ogPost.imageUrls,
+      type: ogPost.type,
       postedBy: repostedBy_UserId,
       comments: [],
       likes: [],
@@ -159,6 +188,18 @@ export async function repost(postId: string, repostedBy_UserId: string) {
         originalPostedBy: ogPost.postedBy,
         originalPostId: ogPost._id,
       },
+    });
+
+    await newPost?.populate({
+      path: "postedBy",
+      model: User,
+      select: "photo username",
+    });
+
+    await newPost?.populate({
+      path: "repost.originalPostedBy",
+      model: User,
+      select: "photo username",
     });
 
     revalidatePath("/feed");

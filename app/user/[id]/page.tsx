@@ -46,7 +46,7 @@ const Profile = () => {
       {userPosts.length > 0 && !loading && (
         <div className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto">
           <Tabs defaultValue="All" className="">
-            <TabsList className="w-full bg-transparent ">
+            <TabsList className="w-full bg-transparent mb-3">
               {tabs.map((t) => (
                 <TabsTrigger key={t} value={t}>
                   {t}

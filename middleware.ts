@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 // todo add public and private routes
 const publicRoutes = createRouteMatcher([
@@ -9,15 +10,10 @@ const publicRoutes = createRouteMatcher([
   "/api/uploadthing",
 ]);
 
-const adminRoutes = createRouteMatcher(["/dashboard(.*)"]);
+// const adminRoutes = createRouteMatcher(["/dashboard(.*)"]);
 
 export default clerkMiddleware((auth, req) => {
   if (!publicRoutes(req)) auth().protect();
-
-  // const { sessionClaims }: any = auth();
-
-  // if (adminRoutes(req) && sessionClaims?.public_metadata.role !== "admin")
-  //   auth().protect();
 });
 
 export const config = {

@@ -26,6 +26,7 @@ import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { createPost } from "@/lib/actions/post.action";
+import { useRouter } from "next/navigation";
 
 const createPostSchema = z.object({
   text: z
@@ -40,6 +41,7 @@ const CreatePostForm = () => {
   const { user } = useUser();
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof createPostSchema>>({
     resolver: zodResolver(createPostSchema),
@@ -65,6 +67,8 @@ const CreatePostForm = () => {
         title: "POSTED!!!",
         description: "Post created successfully.",
       });
+
+      router.push("/feed");
     } catch (error) {
       console.log(error);
       return toast({
@@ -92,7 +96,6 @@ const CreatePostForm = () => {
               <FormControl>
                 <Textarea {...field} />
               </FormControl>
-              <FormDescription>Let's see your creativity</FormDescription>
               <FormMessage />
             </FormItem>
           )}

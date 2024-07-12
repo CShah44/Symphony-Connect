@@ -75,7 +75,6 @@ export async function POST(req: Request) {
 
     const newUser = await createUser(user);
 
-    // todo add role here maybe?
     if (newUser) {
       await clerkClient.users.updateUserMetadata(id, {
         publicMetadata: {
