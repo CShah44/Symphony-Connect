@@ -8,20 +8,25 @@ import { getPosts } from "@/lib/actions/post.action";
 
 const FeedContainer = () => {
   const [posts, setPosts] = useState<IPostFeed[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    setLoading(true);
     async function getAllPosts() {
       const res = await getPosts();
       setPosts([...res]);
     }
 
     getAllPosts();
+    setLoading(false);
   }, []);
 
   const tabs = ["All", "Post", "Oppurtunity", "Event"];
 
+  if (loading) return <div>Loading...</div>;
+
   return (
-    <div className="my-4 p-4 md:w-[650px] w-fullflex flex-col justify-center mx-auto">
+    <div className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto">
       <Tabs defaultValue="All" className="">
         <TabsList className="w-full bg-transparent ">
           {tabs.map((t) => (
@@ -38,7 +43,12 @@ const FeedContainer = () => {
           return (
             <TabsContent className="gap-5 flex flex-col" key={t} value={t}>
               {filteredPosts.map((post) => (
-                <Post key={post._id} post={post} />
+                <Post
+                  key={post._id}
+                  post={post}
+                  posts={posts}
+                  setPosts={setPosts}
+                />
               ))}
             </TabsContent>
           );

@@ -37,9 +37,10 @@ export interface IPostFeed extends Document {
   updatedAt?: Date;
 }
 
-interface IComment {
+export interface IComment {
   userId: string; // ObjectId, reference to User
   text: string;
+  username: string;
   userProfilePic: string;
 }
 
@@ -69,6 +70,10 @@ const postSchema = new Schema(
         userId: {
           type: Schema.Types.ObjectId,
           ref: "User",
+          required: true,
+        },
+        username: {
+          type: String,
           required: true,
         },
         text: {

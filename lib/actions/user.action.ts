@@ -4,10 +4,9 @@ import { revalidatePath } from "next/cache";
 import { connect } from "../database";
 import User from "../database/models/user.model";
 
-export async function getUserById(userId: string) {
+export async function getUserById(userId: any) {
   try {
     await connect();
-
     const user = await User.findById(userId);
 
     if (!user) throw new Error("User not found");
@@ -96,32 +95,37 @@ export async function deleteUser(clerkId: string) {
   }
 }
 
-// todo check
-export async function followUnfollow(userId: string, userTarget: string) {
+export async function followUnfollow(userId: any, userTarget: any) {
   try {
+    if (!userId || !userTarget) throw new Error("User not found");
+
     await connect();
     const user = await User.findById(userId);
-    const userTargetData = await User.findById(userTarget);
 
-    const index = userTargetData.following.findIndex(
-      (id: string) => id === userId
-    );
+    const isFollowing = user.following.includes(userTarget);
+    console.log(isFollowing, userTarget, userId);
 
-    if (index === -1) {
-      user.following.push(userTarget);
-      userTargetData.followers.push(userId);
+    if (isFollowing) {
+      await User.findByIdAndUpdate(userId, {
+        $pull: { following: userTarget },
+      });
+      await User.findByIdAndUpdate(userTarget, {
+        $pull: { followers: userId },
+      });
     } else {
-      user.following = user.following.filter((id: string) => id !== userTarget);
-      userTargetData.followers = userTargetData.followers.filter(
-        (id: string) => id !== userId
-      );
+      await User.findByIdAndUpdate(userId, {
+        $push: { following: userTarget },
+      });
+      await User.findByIdAndUpdate(userTarget, {
+        $push: { followers: userId },
+      });
     }
-    await user.save();
-    await userTargetData.save();
+
     return JSON.parse(
       JSON.stringify({ message: "Followed/Unfollowed successfully" })
     );
   } catch (error) {
+    console.log(error);
     throw new Error("Could not follow/unfollow the user!");
   }
 }

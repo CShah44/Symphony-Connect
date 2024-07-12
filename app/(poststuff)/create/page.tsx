@@ -2,7 +2,7 @@ import CreatePostForm from "@/components/shared/CreatePostForm";
 
 const CreatePost = () => {
   return (
-    <div className="w-[650px] mx-auto text-left">
+    <div className="md:w-[650px] w-full mx-auto text-left">
       <CreatePostForm />
     </div>
   );

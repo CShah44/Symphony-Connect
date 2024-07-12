@@ -50,8 +50,6 @@ const CreatePostForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof createPostSchema>) {
-    //hame chahiye user.public_metadata.userId
-
     try {
       await createPost({
         text: values.text,
@@ -79,7 +77,10 @@ const CreatePostForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="bg-zinc-900">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="bg-zinc-900 w-full p-2"
+      >
         <FormField
           control={form.control}
           name="text"

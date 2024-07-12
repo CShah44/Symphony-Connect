@@ -1,9 +1,11 @@
 // create post
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { connect } from "../database";
 import Post, { IPost } from "../database/models/post.model";
 import User, { IUser } from "../database/models/user.model";
+import { redirect } from "next/navigation";
 
 export async function createPost(post: {
   text: string;
@@ -21,6 +23,8 @@ export async function createPost(post: {
       postedBy: post.id,
     });
 
+    revalidatePath("/feed");
+    redirect("/feed");
     return JSON.parse(JSON.stringify(newPost));
   } catch (error) {
     console.log(error);
@@ -58,31 +62,60 @@ export async function deletePostById(postId: string) {
   try {
     await connect();
     await Post.findByIdAndDelete(postId);
+
+    revalidatePath("/feed");
     return JSON.parse(JSON.stringify({ message: "Post deleted successfully" }));
   } catch (error) {
     throw new Error("Could not delete the post!");
   }
 }
 
-export async function likeUnlike(postId: string, userId: string) {
+export async function likeUnlike(postId: string, userId: any, path: string) {
   try {
     await connect();
 
     const post = await Post.findById(postId);
-    const index = post.likes.findIndex((id: string) => id === userId);
-    if (index === -1) {
-      post.likes.push(userId);
+    const userLikedPost = post.likes.includes(userId);
+
+    if (userLikedPost) {
+      //Unlike
+      await Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
+
+      return JSON.parse(JSON.stringify({ message: "Post unliked!" }));
     } else {
-      post.likes = post.likes.filter((id: string) => id !== userId);
+      //Like
+      await Post.updateOne({ _id: postId }, { $push: { likes: userId } });
+
+      return JSON.parse(JSON.stringify({ message: "Post liked!" }));
     }
-    await post.save();
-    return JSON.parse(JSON.stringify(post));
   } catch (error) {
     throw new Error("Could not like/unlike the post!");
   }
 }
 
-export async function addComment(postId: string, userId: string, text: string) {
+export async function getUserPosts(userId: any) {
+  try {
+    await connect();
+    const posts = await Post.find({ postedBy: userId }).populate({
+      path: "postedBy",
+      model: User,
+      select: "photo username",
+    });
+    return JSON.parse(JSON.stringify(posts));
+  } catch (error) {
+    throw new Error("Could not fetch the posts!");
+  }
+}
+
+export async function addComment({
+  postId,
+  userId,
+  text,
+}: {
+  postId: string;
+  userId: any;
+  text: string;
+}) {
   try {
     await connect();
     const post = await Post.findById(postId);
@@ -95,13 +128,14 @@ export async function addComment(postId: string, userId: string, text: string) {
     const comment = {
       text,
       userId: user._id,
+      username: user.username,
       userProfilePic: user.photo,
     };
 
-    post.comments.push(comment);
+    await Post.updateOne({ _id: postId }, { $push: { comments: comment } });
 
     await post.save();
-    return JSON.parse(JSON.stringify(post));
+    return JSON.parse(JSON.stringify(comment));
   } catch (error) {
     throw new Error("Could not add comment to the post!");
   }
@@ -127,6 +161,7 @@ export async function repost(postId: string, repostedBy_UserId: string) {
       },
     });
 
+    revalidatePath("/feed");
     return JSON.parse(JSON.stringify(newPost));
   } catch (error) {
     throw new Error("Could not repost the post!");
