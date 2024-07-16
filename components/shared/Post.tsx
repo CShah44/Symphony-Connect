@@ -44,6 +44,8 @@ const Post = ({
   const { user } = useUser();
   const [isAddingComment, setIsAddingComment] = useState(false);
 
+  console.log(post);
+
   const isLiked = post.likes.find(
     (id: string) => id === user?.publicMetadata?.userId
   );
@@ -158,8 +160,8 @@ const Post = ({
       <CardHeader>
         {post.repost && (
           <div className="mb-2 text-neutral-300">
-            <Link href={`/user/${post.postedBy._id}`}>
-              Reposted by {post.postedBy.username}
+            <Link href={`/user/${post.postedBy?._id}`}>
+              Reposted by {post.postedBy?.username}
             </Link>
           </div>
         )}
@@ -168,7 +170,7 @@ const Post = ({
             src={
               post.repost
                 ? post.repost.originalPostedBy.photo
-                : post.postedBy.photo
+                : post.postedBy?.photo || ""
             }
             width={50}
             height={50}
@@ -179,16 +181,16 @@ const Post = ({
             href={
               post.repost
                 ? `/user/${post.repost.originalPostedBy._id}`
-                : `/user/${post.postedBy._id}`
+                : `/user/${post.postedBy?._id}`
             }
           >
-            <span className="ml-2">
+            <span className="ml-2 tracking-wide">
               {post.repost
                 ? post.repost.originalPostedBy.username
-                : post.postedBy.username}
+                : post.postedBy?.username}
             </span>
           </Link>
-          {user?.publicMetadata.userId === post.postedBy._id && (
+          {user?.publicMetadata.userId === post.postedBy?._id && (
             <button className="ml-auto" onClick={handleDelete}>
               <Trash size={16} color="#ffffff" />
             </button>

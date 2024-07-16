@@ -26,22 +26,33 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { SlidersHorizontal } from "lucide-react";
 import { toast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const ProfileCard = ({ id }: { id: string }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const { user: currentUser } = useUser();
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setLoading(true);
     async function getUser() {
-      const res = await getUserById(id);
-      setUser(res);
+      try {
+        const res = await getUserById(id);
+        setUser(res);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "User not found",
+          variant: "destructive",
+        });
+        router.push("/");
+      }
+      setLoading(false);
     }
 
     getUser();
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -98,7 +109,7 @@ const ProfileCard = ({ id }: { id: string }) => {
               alt="PFP"
             />
             <div>
-              <CardTitle>
+              <CardTitle className="tracking-wide">
                 {user.firstName} {user.lastName}
               </CardTitle>
               <CardDescription className="text-md">
