@@ -1,6 +1,6 @@
 "use client";
 
-import { followUnfollow, getUserById } from "@/lib/actions/user.action";
+import { followUnfollow } from "@/lib/actions/user.action";
 import { IUser } from "@/lib/database/models/user.model";
 import { useEffect, useState } from "react";
 import {
@@ -77,7 +77,7 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
   }
 
   return (
-    <Card className="w-full sm:w-[650px] text-left mx-auto">
+    <Card className="w-11/12 sm:w-[650px] text-left mx-auto">
       <CardHeader className="flex gap-3 flex-row items-center">
         <Image
           src={user.photo}

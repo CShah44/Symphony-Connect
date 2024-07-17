@@ -1,55 +1,32 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
 import {
   changeOnboardingStatus,
   getOnboardData,
 } from "@/lib/actions/musicprofile.action";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
 import { getUserById } from "@/lib/actions/user.action";
 import { IUser } from "@/lib/database/models/user.model";
 import MusicProfileForm from "@/components/shared/MusicProfileForm";
+import { currentUser } from "@clerk/nextjs/server";
+import { Suspense } from "react";
+
+type OnBoardData = {
+  genres: string[];
+  instruments: string[];
+  skills: string[];
+  favoriteArtists: string[];
+};
 
 // here the use can edit the music profile
-// todo make this server component
-const EditProfile = () => {
-  const [data, setData] = useState({
-    genres: [],
-    instruments: [],
-    skills: [],
-    favoriteArtists: [],
-    bio: "I don't know! I just crashed here!",
-  });
-  const { user, isLoaded } = useUser();
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
-  const [userLoaded, setUserLoaded] = useState(false);
-  const [isOnboarded, setIsOnboarded] = useState<boolean>(false);
+// made this a server component
+const EditProfile = async () => {
+  const data: OnBoardData = await getOnboardData();
 
-  useEffect(() => {
-    setIsLoading(true);
+  const metadata = (await currentUser())!.publicMetadata;
+  const dbUser: IUser | null = await getUserById(metadata.userId);
+  const isOnboarded = metadata.onboarded;
 
-    const preloadData = async () => {
-      const d = await getOnboardData();
-
-      setData(d);
-    };
-
-    const getCurrentUser = async () => {
-      const res = await getUserById(user?.publicMetadata?.userId);
-      setCurrentUser(res);
-      setUserLoaded(true);
-    };
-
-    if (user?.publicMetadata?.onboarded) setIsOnboarded(true);
-    if (isLoaded && user?.publicMetadata?.onboarded) getCurrentUser();
-    if (!isOnboarded) changeOnboardingStatus(true);
-
-    preloadData();
-    setIsLoading(false);
-  }, [isLoaded]);
+  if (!isOnboarded) changeOnboardingStatus(true);
 
   return (
     <div className="text-xl">
@@ -59,14 +36,9 @@ const EditProfile = () => {
           <Button variant={"link"}>Go to account settings</Button>
         </Link>
       </div>
-      {isLoading && !isLoaded && !userLoaded ? (
-        <div className="flex justify-center items-center w-[650px] h-full">
-          Loading..
-        </div>
-      ) : null}
-      {!isLoading && isLoaded && userLoaded && (
-        <MusicProfileForm currentUser={currentUser} data={data} />
-      )}
+      <Suspense fallback={<div>Loading...</div>}>
+        <MusicProfileForm currentUser={dbUser} data={data} />
+      </Suspense>
     </div>
   );
 };

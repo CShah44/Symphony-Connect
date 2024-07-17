@@ -42,7 +42,6 @@ const MusicProfileForm = ({
     instruments: string[];
     skills: string[];
     favoriteArtists: string[];
-    bio: string;
   };
 }) => {
   const router = useRouter();

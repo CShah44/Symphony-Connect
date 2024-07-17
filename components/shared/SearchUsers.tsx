@@ -23,8 +23,10 @@ export const SearchUsers = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="pl-4 w-full text-md h-12"
+        // todo check if this is good ux
         onBlur={() => {
           router.push(pathname);
+          setSearch("");
         }}
       />
       <Button variant={"ghost"} type="submit" className="h-full">

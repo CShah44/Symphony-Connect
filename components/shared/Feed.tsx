@@ -48,16 +48,24 @@ const FeedContainer = ({ id }: { id?: string }) => {
             if (t !== "All") filteredPosts = posts.filter((p) => p.type === t);
 
             return (
-              <TabsContent className="gap-5 flex flex-col" key={t} value={t}>
-                {filteredPosts.map((post) => (
-                  <Post
-                    key={post._id}
-                    post={post}
-                    posts={posts}
-                    setPosts={setPosts}
-                  />
-                ))}
-              </TabsContent>
+              <>
+                {filteredPosts.length > 0 && (
+                  <TabsContent
+                    className="gap-5 flex flex-col"
+                    key={t}
+                    value={t}
+                  >
+                    {filteredPosts.map((post) => (
+                      <Post
+                        key={post._id}
+                        post={post}
+                        posts={posts}
+                        setPosts={setPosts}
+                      />
+                    ))}
+                  </TabsContent>
+                )}
+              </>
             );
           })}
         </Tabs>

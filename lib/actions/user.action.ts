@@ -17,10 +17,42 @@ export async function getUserById(userId: any) {
   }
 }
 
-export async function getUsers() {
+export async function getUsers(query?: string, tag?: string) {
   try {
     await connect();
-    const users = await User.find();
+
+    let users: IUser[];
+
+    // filter users if query exists by matching the firstName or lastName
+    // if a tag is provided, filter users by matching tag with genres, instruments, skills, or favoriteArtists
+
+    const queryConditions = query
+      ? {
+          $or: [
+            { firstName: { $regex: query, $options: "i" } },
+            { lastName: { $regex: query, $options: "i" } },
+            { username: { $regex: query, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const tagConditions = tag
+      ? {
+          $or: [
+            { genres: { $regex: query, $options: "i" } },
+            { instruments: { $regex: query, $options: "i" } },
+            { skills: { $regex: query, $options: "i" } },
+            { favoriteArtists: { $regex: query, $options: "i" } },
+          ],
+        }
+      : {};
+
+    // combine the query and tag conditions
+    const conditions = {
+      $and: [queryConditions, tagConditions],
+    };
+
+    users = await User.find(conditions);
 
     // filter out the current user
     const temp = users.filter((user: IUser) => user.clerkId !== auth().userId);
