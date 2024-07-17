@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { connect } from "../database";
-import User from "../database/models/user.model";
+import User, { IUser } from "../database/models/user.model";
+import { auth } from "@clerk/nextjs/server";
 
 export async function getUserById(userId: any) {
   try {
@@ -13,6 +14,20 @@ export async function getUserById(userId: any) {
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
     throw new Error("Could not get the user in database");
+  }
+}
+
+export async function getUsers() {
+  try {
+    await connect();
+    const users = await User.find();
+
+    // filter out the current user
+    const temp = users.filter((user: IUser) => user.clerkId !== auth().userId);
+
+    return JSON.parse(JSON.stringify(temp));
+  } catch (error) {
+    throw new Error("Could not get the users in database");
   }
 }
 
@@ -103,7 +118,6 @@ export async function followUnfollow(userId: any, userTarget: any) {
     const user = await User.findById(userId);
 
     const isFollowing = user.following.includes(userTarget);
-    console.log(isFollowing, userTarget, userId);
 
     if (isFollowing) {
       await User.findByIdAndUpdate(userId, {
@@ -120,6 +134,8 @@ export async function followUnfollow(userId: any, userTarget: any) {
         $push: { followers: userId },
       });
     }
+
+    revalidatePath("/discover");
 
     return JSON.parse(
       JSON.stringify({ message: "Followed/Unfollowed successfully" })

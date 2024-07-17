@@ -1,5 +1,6 @@
 "use server";
 
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { connect } from "../database";
 import {
   Genre,
@@ -73,8 +74,24 @@ export const getOnboardData = async () => {
       genres: genres.map((g) => g.name),
       favoriteArtists: artists.map((a) => a.name),
     };
+
+    // const isOnBoarded = auth().sessionClaims?.public_metadata?.onboarded;
+
     return JSON.parse(JSON.stringify(data));
   } catch (error) {
     throw new Error("Could not get onboard data from DB");
+  }
+};
+
+export const changeOnboardingStatus = async (status: boolean) => {
+  try {
+    await connect();
+    clerkClient().users.updateUserMetadata(auth().userId || "", {
+      publicMetadata: {
+        onboarded: status,
+      },
+    });
+  } catch (error) {
+    throw new Error("Could not change onboarding status");
   }
 };

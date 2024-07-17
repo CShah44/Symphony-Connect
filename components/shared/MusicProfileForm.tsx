@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Form,
   FormControl,
@@ -48,11 +50,11 @@ const MusicProfileForm = ({
   const form = useForm<z.infer<typeof EditMusicProfileSchema>>({
     resolver: zodResolver(EditMusicProfileSchema),
     defaultValues: {
-      genres: currentUser?.genres,
+      genres: currentUser?.genres || [],
       instruments: currentUser?.instruments || [],
       skills: currentUser?.skills || [],
       favoriteArtists: currentUser?.favoriteArtists || [],
-      bio: currentUser?.bio || "This is my first time!",
+      bio: currentUser?.bio || "I dont know! I just crashed here!",
     },
   });
 

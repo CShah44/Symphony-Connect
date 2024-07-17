@@ -1,6 +1,7 @@
 import mongoose, { Document, models, Schema } from "mongoose";
 
 export interface IUser extends Document {
+  _id: string;
   followers: string[];
   following: string[];
   genres: string[];

@@ -80,6 +80,7 @@ export async function POST(req: Request) {
         publicMetadata: {
           userId: newUser._id,
           role: "user",
+          onboarded: false,
         },
       });
     }

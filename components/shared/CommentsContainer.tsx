@@ -78,8 +78,8 @@ const CommentsContainer = ({
                   className="rounded-full"
                 />
                 <div className="flex flex-col">
-                  <span className="text-sm">{comment.username}</span>
-                  <span className="text-sm">{comment.text}</span>
+                  <span className="text-md">{comment.username}</span>
+                  <span className="text-sm text-stone-300">{comment.text}</span>
                 </div>
               </div>
             ))}

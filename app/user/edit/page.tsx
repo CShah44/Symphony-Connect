@@ -2,7 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { getOnboardData } from "@/lib/actions/musicprofile.action";
+import {
+  changeOnboardingStatus,
+  getOnboardData,
+} from "@/lib/actions/musicprofile.action";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { getUserById } from "@/lib/actions/user.action";
@@ -10,6 +13,7 @@ import { IUser } from "@/lib/database/models/user.model";
 import MusicProfileForm from "@/components/shared/MusicProfileForm";
 
 // here the use can edit the music profile
+// todo make this server component
 const EditProfile = () => {
   const [data, setData] = useState({
     genres: [],
@@ -22,6 +26,7 @@ const EditProfile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<IUser | null>(null);
   const [userLoaded, setUserLoaded] = useState(false);
+  const [isOnboarded, setIsOnboarded] = useState<boolean>(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -30,7 +35,6 @@ const EditProfile = () => {
       const d = await getOnboardData();
 
       setData(d);
-      setIsLoading(false);
     };
 
     const getCurrentUser = async () => {
@@ -39,11 +43,13 @@ const EditProfile = () => {
       setUserLoaded(true);
     };
 
-    if (isLoaded) getCurrentUser();
-    preloadData();
-  }, [isLoaded]);
+    if (user?.publicMetadata?.onboarded) setIsOnboarded(true);
+    if (isLoaded && user?.publicMetadata?.onboarded) getCurrentUser();
+    if (!isOnboarded) changeOnboardingStatus(true);
 
-  console.log(currentUser);
+    preloadData();
+    setIsLoading(false);
+  }, [isLoaded]);
 
   return (
     <div className="text-xl">

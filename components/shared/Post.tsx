@@ -44,8 +44,6 @@ const Post = ({
   const { user } = useUser();
   const [isAddingComment, setIsAddingComment] = useState(false);
 
-  console.log(post);
-
   const isLiked = post.likes.find(
     (id: string) => id === user?.publicMetadata?.userId
   );
