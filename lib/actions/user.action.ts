@@ -3,12 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { connect } from "../database";
 import User, { IUser } from "../database/models/user.model";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export async function getUserById(userId: any) {
   try {
     await connect();
     const user = await User.findById(userId);
+    const clerkUser = await currentUser();
+
+    if (clerkUser?.publicMetadata.onboarded === false && !user) return null;
 
     if (!user) throw new Error("User not found");
     return JSON.parse(JSON.stringify(user));

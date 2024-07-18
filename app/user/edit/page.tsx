@@ -9,6 +9,7 @@ import { IUser } from "@/lib/database/models/user.model";
 import MusicProfileForm from "@/components/shared/MusicProfileForm";
 import { currentUser } from "@clerk/nextjs/server";
 import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type OnBoardData = {
   genres: string[];
@@ -23,8 +24,8 @@ const EditProfile = async () => {
   const data: OnBoardData = await getOnboardData();
 
   const metadata = (await currentUser())!.publicMetadata;
-  const dbUser: IUser | null = await getUserById(metadata.userId);
   const isOnboarded = metadata.onboarded;
+  const dbUser: IUser | null = (await getUserById(metadata.userId)) || null;
 
   if (!isOnboarded) changeOnboardingStatus(true);
 
@@ -36,7 +37,7 @@ const EditProfile = async () => {
           <Button variant={"link"}>Go to account settings</Button>
         </Link>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Skeleton className="w-[650px] h-[500px]" />}>
         <MusicProfileForm currentUser={dbUser} data={data} />
       </Suspense>
     </div>

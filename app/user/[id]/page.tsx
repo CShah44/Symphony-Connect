@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { getUserById } from "@/lib/actions/user.action";
 import { toast } from "@/components/ui/use-toast";
 import { IUser } from "@/lib/database/models/user.model";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Profile = () => {
   const { id }: { id: string } = useParams();
@@ -37,7 +38,7 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col justify-center items-center gap-3">
-      {loading && <div>Loading...</div>}
+      {loading && <Skeleton className="w-11/12 sm:w-[650px] h-[300px]" />}
       {!loading && user && <ProfileCard userProps={user} />}
       <FeedContainer id={id} />
     </div>

@@ -5,6 +5,7 @@ import Post from "./Post";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IPostFeed } from "@/lib/database/models/post.model";
 import { getPosts, getUserPosts } from "@/lib/actions/post.action";
+import { Skeleton } from "../ui/skeleton";
 
 const FeedContainer = ({ id }: { id?: string }) => {
   const [posts, setPosts] = useState<IPostFeed[]>([]);
@@ -29,7 +30,14 @@ const FeedContainer = ({ id }: { id?: string }) => {
 
   const tabs = ["All", "Post", "Oppurtunity", "Event"];
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <>
+        <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
+        <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
+        <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
+      </>
+    );
 
   return (
     <div className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto">
@@ -72,9 +80,10 @@ const FeedContainer = ({ id }: { id?: string }) => {
       )}
 
       {loading && (
-        <div className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto">
-          <div className="text-center">Loading...</div>
-        </div>
+        <>
+          <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
+          <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
+        </>
       )}
 
       {posts.length === 0 && !loading && (
