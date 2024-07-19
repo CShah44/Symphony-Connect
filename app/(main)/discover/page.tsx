@@ -12,9 +12,11 @@ const Discover = async (params: { searchParams: { search?: string } }) => {
     <div className="md:w-[650px] w-full mx-auto text-left ">
       <SearchUsers />
       <br />
-      {users.map((user: IUser) => (
-        <ProfileCard key={user._id} userProps={user} />
-      ))}
+      <div className="flex flex-col gap-3">
+        {users.map((user: IUser) => (
+          <ProfileCard key={user._id} userProps={user} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -29,10 +29,7 @@ import { createPost } from "@/lib/actions/post.action";
 import { useRouter } from "next/navigation";
 
 const createPostSchema = z.object({
-  text: z
-    .string()
-    .min(3, "Your post should contain at least 3 characters")
-    .max(500, "Your post should be of less than 500 characters"),
+  text: z.string().max(700, "Your post should be of less than 500 characters"),
   images: z.any(),
   type: z.string(),
 });
@@ -118,7 +115,7 @@ const CreatePostForm = () => {
                 <SelectContent>
                   <SelectItem value="Post">Post</SelectItem>
                   <SelectItem value="Event">Event</SelectItem>
-                  <SelectItem value="Oppurtunity">Oppurtunity</SelectItem>
+                  <SelectItem value="Opportunity">Opportunity</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
@@ -128,6 +125,9 @@ const CreatePostForm = () => {
             </FormItem>
           )}
         />
+        {/* if the user has selected an event show an extra date field */}
+        {form.watch("type") === "Event" && <div>todo</div>}
+
         <Button
           disabled={form.formState.isSubmitting}
           variant={"outline"}

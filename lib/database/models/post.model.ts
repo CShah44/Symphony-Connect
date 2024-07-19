@@ -15,6 +15,7 @@ export interface IPost extends Document {
   };
   createdAt?: Date;
   updatedAt?: Date;
+  eventDate?: Date;
 }
 
 export interface IPostFeed extends Document {
@@ -40,6 +41,7 @@ export interface IPostFeed extends Document {
   };
   createdAt?: Date;
   updatedAt?: Date;
+  // eventDate?: Date;
 }
 
 export interface IComment {
@@ -102,6 +104,7 @@ const postSchema = new Schema(
         ref: "Post",
       },
     },
+    // eventDate: { type: Date, default: Date.now },
   },
   {
     timestamps: true,

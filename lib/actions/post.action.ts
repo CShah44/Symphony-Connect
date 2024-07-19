@@ -5,12 +5,12 @@ import { revalidatePath } from "next/cache";
 import { connect } from "../database";
 import Post, { IPost } from "../database/models/post.model";
 import User, { IUser } from "../database/models/user.model";
-import { text } from "node:stream/consumers";
 
 export async function createPost(post: {
   text: string;
   type: String;
   imageUrls: String[];
+  // eventDate?: Date;
   id: any;
 }) {
   try {
@@ -20,6 +20,7 @@ export async function createPost(post: {
       text: post.text,
       type: post.type,
       imageUrls: post.imageUrls,
+      // eventDate: post.eventDate || null,
       postedBy: post.id,
     });
 
