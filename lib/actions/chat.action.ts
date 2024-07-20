@@ -123,18 +123,38 @@ export const sendMessage = async (
   try {
     await connect();
 
-    const newMessage = new Message({
+    const newMessage = await Message.create({
       conversation: conversationId,
       text,
       photos,
       sender: userId,
     });
 
-    console.log(newMessage);
+    const populatedMessage = await Message.findById(newMessage._id)
+      .populate({
+        path: "sender",
+        model: User,
+        select: "firstName lastName photo username",
+      })
+      .populate({
+        path: "conversation",
+        model: Conversation,
+        select: "groupName groupPhoto",
+      })
+      .populate({
+        path: "conversation.createdBy",
+        model: User,
+        select: "firstName lastName photo username",
+      })
+      .populate({
+        path: "conversation.participants",
+        model: User,
+        select: "firstName lastName photo username",
+      });
 
-    pusherServer.trigger(conversationId, "new-message", newMessage);
+    await pusherServer.trigger(conversationId, "new-message", populatedMessage);
 
-    return JSON.parse(JSON.stringify(newMessage));
+    return JSON.parse(JSON.stringify(populatedMessage));
   } catch (error) {
     console.log(error);
     throw new Error("Could not send the message in database");

@@ -10,25 +10,25 @@ import { pusherClient } from "@/lib/pusher/pusherClient";
 import { Input } from "../ui/input";
 import { sendMessage } from "@/lib/actions/chat.action";
 import { toast } from "../ui/use-toast";
+import { IConversation } from "@/lib/database/models/conversation.model";
 
 export default function MessageContainer({
   messages: preLoadedMessages,
   userId,
-  conversationId,
+  conversation,
 }: {
-  conversationId: string;
+  conversation: IConversation;
   userId?: string;
   messages: IMessage[];
 }) {
   const [messages, setMessages] = useState(preLoadedMessages);
-
+  const conversationId = conversation._id;
   const inputRef = useRef<HTMLInputElement>(null);
-
-  console.log(messages);
 
   useEffect(() => {
     pusherClient.subscribe(conversationId);
     pusherClient.bind("new-message", (data: IMessage) => {
+      console.log("naya message aagaya");
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
@@ -66,7 +66,17 @@ export default function MessageContainer({
           <ArrowLeftIcon className="w-5 h-5" />
           <span className="font-medium">Back</span>
         </Link>
-        <h2 className="text-lg font-medium  text-center flex-1">Message</h2>
+        <h2 className="text-lg font-medium  text-center flex-1">
+          {conversation.groupName}
+        </h2>
+        <h2 className="text-lg font-medium  text-center flex-1">
+          {/* todo make it dropdown  */}
+          {conversation.participants.map((participant) => (
+            <span className="font-sm text-zinc-500 mr-2" key={participant._id}>
+              {participant.firstName} {participant.lastName}
+            </span>
+          ))}
+        </h2>
       </div>
       <div className="flex-1 overflow-auto p-4">
         <div className="grid gap-4">

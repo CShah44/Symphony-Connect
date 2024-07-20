@@ -16,7 +16,7 @@ const Chat = async ({ params }: { params: { id: string } }) => {
   return (
     <>
       <MessageContainer
-        conversationId={params.id}
+        conversation={conversation}
         messages={messages}
         userId={sessionClaims?.public_metadata?.userId}
       />
