@@ -20,6 +20,21 @@ export async function getUserById(userId: any) {
   }
 }
 
+export async function getUserFollowers(userId: string) {
+  try {
+    await connect();
+    const followers = (
+      await User.findById(userId)
+        .populate("followers", "firstName lastName photo username", User)
+        .select("followers")
+    ).followers;
+
+    return JSON.parse(JSON.stringify(followers));
+  } catch (error) {
+    throw new Error("Could not get the user in database");
+  }
+}
+
 export async function getUsers(query?: string, tag?: string) {
   try {
     await connect();

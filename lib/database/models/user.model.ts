@@ -16,6 +16,7 @@ export interface IUser extends Document {
   photo: string;
   username: string;
   bio: string;
+  // conversations: string[];
 }
 
 const userSchema: Schema = new Schema(
@@ -37,6 +38,9 @@ const userSchema: Schema = new Schema(
     photo: { type: String, default: "" },
     username: { type: String, default: "" },
     bio: { type: String, default: "" },
+    // conversations: [
+    //   { type: Schema.Types.ObjectId, ref: "Conversation", default: [] },
+    // ],
   },
   { timestamps: true }
 );
