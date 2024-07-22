@@ -14,6 +14,12 @@ export interface IConversation extends Document {
   groupName: string;
   groupPhoto: string;
   createdBy: IParticipant;
+  type: string;
+  lastMessage: {
+    text: string;
+    sender: string;
+    hasPhotos: boolean;
+  };
 }
 
 // no need to store messages as an array here
@@ -23,6 +29,12 @@ const conversationSchema: Schema = new Schema(
     groupName: { type: String, default: "" },
     groupPhoto: { type: String, default: "" },
     createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+    type: { type: String, enum: ["group", "contact"], default: "group" },
+    lastMessage: {
+      text: { type: String, default: "" },
+      sender: { type: String, default: "" },
+      hasPhotos: { type: Boolean, default: false },
+    },
   },
   { timestamps: true }
 );

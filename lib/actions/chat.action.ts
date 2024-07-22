@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { connect } from "../database";
 import Conversation, {
   IConversation,
@@ -35,6 +36,7 @@ export const getUserConversations = async (userId: string) => {
 export const createConversation = async (
   participants: string[],
   groupName: string,
+  type: string,
   groupPhoto?: string
 ) => {
   try {
@@ -48,7 +50,10 @@ export const createConversation = async (
       groupName: groupName,
       groupPhoto: groupPhoto || "",
       createdBy: participants[0],
+      type: type,
     });
+
+    revalidatePath("/chat");
 
     return JSON.parse(JSON.stringify(conversation));
   } catch (error) {
@@ -123,6 +128,14 @@ export const sendMessage = async (
   try {
     await connect();
 
+    const conversation: IConversation | null = await Conversation.findById(
+      conversationId
+    );
+
+    if (!conversation) {
+      throw new Error("Conversation not found");
+    }
+
     const newMessage = await Message.create({
       conversation: conversationId,
       text,
@@ -152,11 +165,83 @@ export const sendMessage = async (
         select: "firstName lastName photo username",
       });
 
+    conversation!.lastMessage = {
+      text: populatedMessage.text,
+      sender: populatedMessage.sender.firstName,
+      hasPhotos: populatedMessage.photos.length > 0,
+    };
+
+    await conversation.save();
+
     await pusherServer.trigger(conversationId, "new-message", populatedMessage);
 
     return JSON.parse(JSON.stringify(populatedMessage));
   } catch (error) {
     console.log(error);
     throw new Error("Could not send the message in database");
+  }
+};
+
+export const verifyContact = async (userId: string, otherUserId: string) => {
+  try {
+    await connect();
+
+    const conversation: IConversation | null = await Conversation.findOne({
+      type: "contact",
+      participants: { $all: [userId, otherUserId] },
+    })
+      .populate({
+        path: "participants",
+        model: User,
+        select: "firstName lastName photo username",
+      })
+      .populate({
+        path: "createdBy",
+        model: User,
+        select: "firstName lastName photo username",
+      });
+
+    return JSON.parse(JSON.stringify(conversation));
+  } catch (error) {
+    console.log(error);
+    throw new Error("Could not check if conversation exists in database");
+  }
+};
+
+export const sendJamRequest = async (userId: string, otherUserId: string) => {
+  try {
+    await connect();
+
+    // check if conversation exists
+    const conversation = await verifyContact(userId, otherUserId);
+
+    if (conversation) {
+      // send message to conversation
+      const message = await sendMessage(
+        conversation._id,
+        "Hey! I would like to jamm with you! Hope we connect soon!",
+        userId
+      );
+
+      await conversation.save();
+    } else {
+      // create conversation
+      const newConversation = await createConversation(
+        [userId, otherUserId],
+        "Hey! I would like to jamm with you! Hope we connect soon!",
+        "contact"
+      );
+      // send message to conversation
+      const message = await sendMessage(
+        newConversation._id,
+        "Hey! I would like to jamm with you! Hope we connect soon!",
+        userId
+      );
+    }
+
+    return JSON.parse(JSON.stringify({ message: "JAMM! request sent" }));
+  } catch (error) {
+    // console.log(error);
+    throw new Error("Could not send the JAM request in database");
   }
 };

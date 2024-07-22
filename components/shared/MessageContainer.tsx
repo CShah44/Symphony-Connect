@@ -28,7 +28,6 @@ export default function MessageContainer({
   useEffect(() => {
     pusherClient.subscribe(conversationId);
     pusherClient.bind("new-message", (data: IMessage) => {
-      console.log("naya message aagaya");
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
@@ -55,9 +54,21 @@ export default function MessageContainer({
     }
   }
 
+  let convName;
+
+  if (conversation.type === "group") {
+    convName = conversation.groupName;
+  } else if (conversation.type === "contact") {
+    if (userId === conversation.participants[0]._id) {
+      convName = conversation.participants[1].firstName;
+    } else {
+      convName = conversation.participants[0].firstName;
+    }
+  }
+
   return (
     <div className="flex flex-col border h-screen sm:h-[80vh] w-full md:w-10/12 lg:w-8/12 mx-auto rounded-3xl">
-      <div className="border-slate-300 border rounded-3xl w-full p-4 flex items-center gap-4 mx-auto">
+      <div className="shadow-2xl rounded-3xl w-full p-4 flex items-center gap-4 mx-auto">
         <Link
           href="/chat"
           className="inline-flex items-center gap-2"
@@ -66,16 +77,18 @@ export default function MessageContainer({
           <ArrowLeftIcon className="w-5 h-5" />
           <span className="font-medium">Back</span>
         </Link>
+        <h2 className="text-lg font-medium  text-center flex-1">{convName}</h2>
         <h2 className="text-lg font-medium  text-center flex-1">
-          {conversation.groupName}
-        </h2>
-        <h2 className="text-lg font-medium  text-center flex-1">
-          {/* todo make it dropdown  */}
-          {conversation.participants.map((participant) => (
-            <span className="font-sm text-zinc-500 mr-2" key={participant._id}>
-              {participant.firstName} {participant.lastName}
-            </span>
-          ))}
+          {/* todo make it drawer, can display/edit participants, also show grp photo and all  */}
+          {conversation.type === "group" &&
+            conversation.participants.map((participant) => (
+              <span
+                className="font-sm text-zinc-500 mr-2"
+                key={participant._id}
+              >
+                {participant.firstName} {participant.lastName}
+              </span>
+            ))}
         </h2>
       </div>
       <div className="flex-1 overflow-auto p-4">
@@ -123,16 +136,14 @@ const Message = ({
       <Image
         src={message.sender.photo}
         alt={message.sender.firstName}
-        width={10}
-        height={10}
+        width={40}
+        height={40}
         className="rounded-full"
       />
-      <div>
-        {message.sender.firstName} {message.sender.lastName}
-      </div>
       <div className="grid gap-1 bg-primary text-primary-foreground p-3 rounded-lg max-w-[75%]">
         <p className="text-sm">{message.text}</p>
       </div>
+      <span>{message.sender.firstName}</span>
     </div>
   );
 };

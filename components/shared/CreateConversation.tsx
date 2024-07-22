@@ -27,6 +27,7 @@ import { Checkbox } from "../ui/checkbox";
 import { toast } from "../ui/use-toast";
 import { createConversation } from "@/lib/actions/chat.action";
 import { useRouter } from "next/navigation";
+import { MessageSquareDiff } from "lucide-react";
 
 const createConversationSchema = z.object({
   groupName: z.string().min(1).max(100),
@@ -57,6 +58,7 @@ export default function CreateConversation({
       const conversation = await createConversation(
         values.participants,
         values.groupName,
+        "group",
         values.groupPhoto
       );
 
@@ -79,9 +81,11 @@ export default function CreateConversation({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Create Conversation</Button>
+        <Button className="text-md p-4" variant="outline">
+          Create Conversation <MessageSquareDiff className="ml-2" />
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] font-agrandir">
         <DialogHeader>
           <DialogTitle>Create a new conversation</DialogTitle>
           <DialogDescription>

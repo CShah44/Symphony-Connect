@@ -24,9 +24,16 @@ import { Badge } from "../ui/badge";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { SlidersHorizontal } from "lucide-react";
+import {
+  CircleUserRound,
+  MessageCircle,
+  SlidersHorizontal,
+  UserPlus,
+  UserX,
+} from "lucide-react";
 import { toast } from "../ui/use-toast";
 import { usePathname } from "next/navigation";
+import { sendJamRequest } from "@/lib/actions/chat.action";
 
 const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
   const [user, setUser] = useState<IUser | null>(userProps);
@@ -66,6 +73,27 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
     } catch (error) {
       toast({
         title: "Error following/unfollowing",
+        description: "Something went wrong, please try again later",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleJamRequest = async () => {
+    try {
+      await sendJamRequest(
+        currentUser?.publicMetadata?.userId as string,
+        user?._id || ""
+      );
+
+      toast({
+        title: "JAM request sent",
+        description: `You've sent a JAM request to this ${user?.firstName}`,
+        variant: "default",
+      });
+    } catch (error) {
+      toast({
+        title: "Error sending JAM request",
         description: "Something went wrong, please try again later",
         variant: "destructive",
       });
@@ -114,7 +142,9 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
         )}
         {pathname.includes("discover") && (
           <Link className="ml-auto" href={`/user/${user._id}`}>
-            <Button variant="outline">Go to Profile</Button>
+            <Button variant="outline">
+              <CircleUserRound />
+            </Button>
           </Link>
         )}
       </CardHeader>
@@ -143,9 +173,24 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
         </div>
 
         {!isCurrentUserReqUser && (
-          <Button onClick={handleFollowUnfollow} variant="outline">
-            {isFollowing ? "Unfollow" : "Follow"}
-          </Button>
+          <div className="flex justify-between w-full">
+            <Button
+              onClick={handleFollowUnfollow}
+              variant={isFollowing ? "secondary" : "outline"}
+            >
+              {isFollowing ? <UserX /> : <UserPlus />}
+            </Button>
+            <div className="flex gap-3 items-center">
+              <Button variant={"outline"} onClick={handleJamRequest}>
+                JAMM! request
+              </Button>
+              <Link href={`/chat/${user._id}`}>
+                <Button variant="outline">
+                  <MessageCircle />
+                </Button>
+              </Link>
+            </div>
+          </div>
         )}
       </CardFooter>
     </Card>
