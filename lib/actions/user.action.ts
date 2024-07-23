@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 import { connect } from "../database";
 import User, { IUser } from "../database/models/user.model";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import Conversation, {
+  IConversation,
+  IParticipant,
+} from "../database/models/conversation.model";
 
 export async function getUserById(userId: any) {
   try {
@@ -68,14 +72,14 @@ export async function getUsers(query?: string, tag?: string) {
     // combine the query and tag conditions
     const conditions = {
       $and: [queryConditions, tagConditions],
+      // write another condition that auth().userId !== to usre.clerkId
+      // this will filter out the current user
+      clerkId: { $ne: auth().userId },
     };
 
     users = await User.find(conditions);
 
-    // filter out the current user
-    const temp = users.filter((user: IUser) => user.clerkId !== auth().userId);
-
-    return JSON.parse(JSON.stringify(temp));
+    return JSON.parse(JSON.stringify(users));
   } catch (error) {
     throw new Error("Could not get the users in database");
   }
@@ -132,6 +136,8 @@ export async function updateMusicProfile(data: {
       throw new Error("User not found");
     }
 
+    revalidatePath(`/user/${user._id}`);
+
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
     console.error(error);
@@ -144,14 +150,43 @@ export async function deleteUser(clerkId: string) {
     await connect();
 
     // Find user to delete
-    const userToDelete = await User.findOne({ clerkId });
+    const userToDelete: IUser | null = await User.findOne({ clerkId });
 
     if (!userToDelete) {
       throw new Error("User not found");
     }
 
+    const userId = userToDelete._id;
+
     // Delete user
     const deletedUser = await User.findByIdAndDelete(userToDelete._id);
+
+    // find all conversations user is a part of and delete his id from participants
+    const conversations = await Conversation.find({ participants: userId });
+    conversations.forEach((conversation: IConversation) => {
+      conversation.participants = conversation.participants.filter(
+        (participant: IParticipant) => participant._id !== userId
+      );
+      conversation.save();
+    });
+
+    // delete the user's id from followers and following of all other users
+    const users = await User.find();
+    users.forEach(async (user: IUser) => {
+      if (user.following.includes(userId)) {
+        user.following = user.following.filter(
+          (followingId) => followingId !== userId
+        );
+        await user.save();
+      }
+      if (user.followers.includes(userId)) {
+        user.followers = user.followers.filter(
+          (followerId) => followerId !== userId
+        );
+        await user.save();
+      }
+    });
+
     revalidatePath("/");
 
     return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;
@@ -193,5 +228,17 @@ export async function followUnfollow(userId: any, userTarget: any) {
   } catch (error) {
     console.log(error);
     throw new Error("Could not follow/unfollow the user!");
+  }
+}
+
+export async function getCurrentUser() {
+  try {
+    await connect();
+    const user: IUser | null = await User.findById(
+      auth().sessionClaims?.public_metadata?.userId
+    );
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    throw new Error("Could not get the user in database");
   }
 }

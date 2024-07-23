@@ -1,6 +1,6 @@
 "use client";
 
-import { followUnfollow } from "@/lib/actions/user.action";
+import { followUnfollow, getUserById } from "@/lib/actions/user.action";
 import { IUser } from "@/lib/database/models/user.model";
 import { useEffect, useState } from "react";
 import {
@@ -141,11 +141,17 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
           </DropdownMenu>
         )}
         {pathname.includes("discover") && (
-          <Link className="ml-auto" href={`/user/${user._id}`}>
-            <Button variant="outline">
-              <CircleUserRound />
-            </Button>
-          </Link>
+          <div className="ml-auto flex flex-row gap-3">
+            {(user.instruments.length > 0 || user.skills.length > 0) && (
+              <Badge className="tracking-wide">Artist</Badge>
+            )}
+
+            <Link href={`/user/${user._id}`}>
+              <Button variant="outline">
+                <CircleUserRound />
+              </Button>
+            </Link>
+          </div>
         )}
       </CardHeader>
       <CardContent className="flex flex-col gap-3">

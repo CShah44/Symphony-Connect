@@ -71,7 +71,7 @@ export const FloatingNav = ({ className }: { className?: string }) => {
             </Link>
           ))}
         </div>
-        <div className="hidden sm:flex sm:flex-row sm:gap-4">
+        <div className="hidden lg:flex lg:flex-row lg:gap-4">
           <SignedOut>
             <button className="border text-sm font-medium relative border-white/[0.2] text-neutral-100 px-4 py-2 rounded-full">
               <SignInButton />

@@ -222,8 +222,6 @@ export const sendJamRequest = async (userId: string, otherUserId: string) => {
         "Hey! I would like to jamm with you! Hope we connect soon!",
         userId
       );
-
-      await conversation.save();
     } else {
       // create conversation
       const newConversation = await createConversation(
@@ -241,7 +239,7 @@ export const sendJamRequest = async (userId: string, otherUserId: string) => {
 
     return JSON.parse(JSON.stringify({ message: "JAMM! request sent" }));
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     throw new Error("Could not send the JAM request in database");
   }
 };

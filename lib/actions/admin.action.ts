@@ -17,8 +17,12 @@ export async function setRole(id: string, role: Roles) {
   }
 
   try {
+    const user = await clerkClient().users.getUser(id);
     const res = await clerkClient().users.updateUser(id, {
-      publicMetadata: { role },
+      publicMetadata: {
+        ...user.publicMetadata,
+        role,
+      },
     });
     return { message: res.publicMetadata };
   } catch (err) {

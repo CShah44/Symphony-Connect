@@ -19,18 +19,18 @@ export default function Hero() {
         }}
         className="relative flex flex-col gap-4 items-center justify-center px-4 font-agrandir"
       >
-        <div className="font-extralight md:text-4xl text-neutral-200 py-4">
+        <div className="font-extralight text-2xl md:text-4xl text-neutral-200 py-4">
           Welcome to
         </div>
         <div>
-          <div className="font-melodrama text-6xl md:text-9xl font-bold text-zinc-100 text-center">
+          <div className="font-melodrama text-7xl md:text-9xl font-bold text-zinc-100 text-center">
             SYMPHONY
           </div>
-          <div className="font-melodrama text-5xl md:text-7xl font-bold text-zinc-100 text-center">
+          <div className="font-melodrama text-6xl md:text-7xl font-bold text-zinc-100 text-center">
             CONNECT
           </div>
         </div>
-        <div className="font-extralight md:text-4xl text-neutral-200 py-4">
+        <div className="font-extralight text-xl md:text-4xl text-neutral-200 py-4">
           The music community you've been looking for
         </div>
         <div className="flex gap-4">

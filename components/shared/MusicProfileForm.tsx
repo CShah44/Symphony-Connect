@@ -84,102 +84,6 @@ const MusicProfileForm = ({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="instruments"
-          render={() => (
-            <FormItem className="w-[650px] ">
-              <div className="mb-4">
-                <FormLabel className="text-base">Instruments</FormLabel>
-                <FormDescription>
-                  What instruments do you play? (max 10)
-                </FormDescription>
-              </div>
-              <div className="flex flex-wrap gap-5 text-md">
-                {data?.instruments.map((item) => (
-                  <FormField
-                    key={item}
-                    control={form.control}
-                    name="instruments"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key={item}
-                          className="flex flex-row items-start space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(item)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, item])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item
-                                      )
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal">{item}</FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="skills"
-          render={() => (
-            <FormItem className="w-[650px] ">
-              <div className="mb-4">
-                <FormLabel className="text-base">Skills</FormLabel>
-                <FormDescription>
-                  What skills do you have? (max 10)
-                </FormDescription>
-              </div>
-              <div className="flex flex-wrap gap-5 text-md">
-                {data?.skills.map((item) => (
-                  <FormField
-                    key={item}
-                    control={form.control}
-                    name="skills"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key={item}
-                          className="flex flex-row items-start space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(item)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, item])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item
-                                      )
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal">{item}</FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="favoriteArtists"
           render={() => (
             <FormItem className="w-[650px] ">
@@ -288,7 +192,105 @@ const MusicProfileForm = ({
             </FormItem>
           )}
         />
-
+        <div className="pt-3">
+          Do you play any instruments or have any skills?
+        </div>
+        <FormField
+          control={form.control}
+          name="instruments"
+          render={() => (
+            <FormItem className="w-[650px] ">
+              <div className="mb-4">
+                <FormLabel className="text-base">Instruments</FormLabel>
+                <FormDescription>
+                  What instruments do you play? (max 10)
+                </FormDescription>
+              </div>
+              <div className="flex flex-wrap gap-5 text-md">
+                {data?.instruments.map((item) => (
+                  <FormField
+                    key={item}
+                    control={form.control}
+                    name="instruments"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={item}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(item)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, item])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) => value !== item
+                                      )
+                                    );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="font-normal">{item}</FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="skills"
+          render={() => (
+            <FormItem className="w-[650px] ">
+              <div className="mb-4">
+                <FormLabel className="text-base">Skills</FormLabel>
+                <FormDescription>
+                  What skills do you have? (max 10)
+                </FormDescription>
+              </div>
+              <div className="flex flex-wrap gap-5 text-md">
+                {data?.skills.map((item) => (
+                  <FormField
+                    key={item}
+                    control={form.control}
+                    name="skills"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={item}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(item)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, item])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value) => value !== item
+                                      )
+                                    );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="font-normal">{item}</FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit">Submit</Button>
         <p className="text-secondary-foreground text-sm">
           You can change this later

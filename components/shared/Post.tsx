@@ -49,37 +49,52 @@ const Post = ({
     (id: string) => id === user?.publicMetadata?.userId
   );
 
+  const [liked, setLiked] = useState(isLiked || false);
+
   const handleLikeUnlike = async () => {
     await likeUnlike(post._id, user?.publicMetadata?.userId, "/feed");
 
-    let newPosts = [];
+    // update the post in the state according to like or unlike
 
-    if (!isLiked) {
-      newPosts = posts.map((post: IPostFeed) => {
-        if (post._id === post._id) {
-          return {
-            ...post,
-            likes: [...post.likes, user?.publicMetadata?.userId],
-          };
-        }
+    if (!liked) {
+      // map over the posts array and update the post with the new likes array
+      // if the post is not liked, add the user's id to the likes array
 
-        return post;
-      });
+      setPosts((prev: IPostFeed[]) =>
+        prev.map((p: IPostFeed) => {
+          if (p._id === post._id) {
+            return {
+              ...p,
+              likes: [...p.likes, user?.publicMetadata?.userId],
+            };
+          }
+
+          return p;
+        })
+      );
+
+      setLiked((prev) => !prev);
     } else {
-      newPosts = posts.map((post: IPostFeed) => {
-        if (post._id === post._id) {
-          return {
-            ...post,
-            likes: post.likes.filter(
-              (id: string) => id !== user?.publicMetadata?.userId
-            ),
-          };
-        }
+      // map over the posts array and update the post with the new likes array
+      // if the post is liked, remove the user's id from the likes array
 
-        return post;
-      });
+      setPosts((prev: IPostFeed[]) =>
+        prev.map((p: IPostFeed) => {
+          if (p._id === post._id) {
+            return {
+              ...p,
+              likes: p.likes.filter(
+                (id: string) => id !== user?.publicMetadata?.userId
+              ),
+            };
+          }
+
+          return p;
+        })
+      );
+
+      setLiked((prev) => !prev);
     }
-    setPosts(newPosts);
   };
 
   const handleAddComment = async (text: string) => {
@@ -96,18 +111,18 @@ const Post = ({
 
       const data = await addComment(comment);
 
-      const updatedPosts = posts.map((post: IPostFeed) => {
-        if (post._id === post._id) {
-          return {
-            ...post,
-            comments: [...post.comments, data],
-          };
-        }
+      setPosts((prev: IPostFeed[]) =>
+        prev.map((p: IPostFeed) => {
+          if (p._id === post._id) {
+            return {
+              ...p,
+              comments: [...p.comments, data],
+            };
+          }
 
-        return post;
-      });
-
-      setPosts(updatedPosts);
+          return p;
+        })
+      );
     } else {
       toast({
         title: "Please enter a comment",
@@ -121,7 +136,7 @@ const Post = ({
   const handleRepost = async () => {
     try {
       const newPost = await repost(post._id, user?.publicMetadata?.userId);
-      setPosts([newPost, ...posts]);
+      setPosts((prev: IPostFeed[]) => [newPost, ...prev]);
 
       toast({
         title: "Reposted!",
@@ -139,7 +154,7 @@ const Post = ({
   const handleDelete = async () => {
     try {
       await deletePostById(post._id);
-      setPosts(posts.filter((p) => p._id !== post._id));
+      setPosts((prev: IPostFeed[]) => prev.filter((p) => p._id !== post._id));
 
       toast({
         title: "Deleted!",
@@ -236,7 +251,7 @@ const Post = ({
       <CardFooter className="flex flex-col gap-4 items-start">
         <div className="flex gap-5 justify-center items-center text-md">
           <Button className="rounded-full text-xl" onClick={handleLikeUnlike}>
-            {isLiked ? <HeartOff /> : <Heart />}
+            {liked ? <HeartOff /> : <Heart />}
           </Button>
           <span>{post.likes.length} Likes</span>
           <CommentsContainer post={post} handleOnSubmit={handleAddComment} />

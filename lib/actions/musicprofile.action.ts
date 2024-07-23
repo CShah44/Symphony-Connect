@@ -75,8 +75,6 @@ export const getOnboardData = async () => {
       favoriteArtists: artists.map((a) => a.name),
     };
 
-    // const isOnBoarded = auth().sessionClaims?.public_metadata?.onboarded;
-
     return JSON.parse(JSON.stringify(data));
   } catch (error) {
     throw new Error("Could not get onboard data from DB");
