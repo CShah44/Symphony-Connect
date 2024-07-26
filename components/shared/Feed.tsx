@@ -9,10 +9,9 @@ import { Skeleton } from "../ui/skeleton";
 
 const FeedContainer = ({ id }: { id?: string }) => {
   const [posts, setPosts] = useState<IPostFeed[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setLoading(true);
     async function getAllPosts() {
       const res = await getPosts();
       setPosts([...res]);
@@ -32,11 +31,11 @@ const FeedContainer = ({ id }: { id?: string }) => {
 
   if (loading)
     return (
-      <>
+      <div className="w-full flex flex-col justify-center mx-auto">
         <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
         <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
         <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
-      </>
+      </div>
     );
 
   return (
@@ -78,14 +77,6 @@ const FeedContainer = ({ id }: { id?: string }) => {
           })}
         </Tabs>
       )}
-
-      {loading && (
-        <>
-          <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
-          <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
-        </>
-      )}
-
       {posts.length === 0 && !loading && (
         <div className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto">
           <div className="text-center">No posts found</div>

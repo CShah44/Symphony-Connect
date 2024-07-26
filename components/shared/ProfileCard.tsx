@@ -34,6 +34,7 @@ import {
 import { toast } from "../ui/use-toast";
 import { usePathname } from "next/navigation";
 import { sendJamRequest } from "@/lib/actions/chat.action";
+import ProfileMatchStat from "./ProfileMatchStat";
 
 const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
   const [user, setUser] = useState<IUser | null>(userProps);
@@ -107,18 +108,27 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
   return (
     <Card className="w-11/12 sm:w-[650px] text-left mx-auto">
       <CardHeader className="flex gap-3 flex-row items-center">
-        <Image
-          src={user.photo}
-          className="rounded-full"
-          height={50}
-          width={50}
-          alt="PFP"
-        />
+        <Link href={`/user/${user._id}`}>
+          <Image
+            src={user.photo}
+            className="rounded-full"
+            height={50}
+            width={50}
+            alt="PFP"
+          />
+        </Link>
         <div>
           <CardTitle className="tracking-wide">
             {user.firstName} {user.lastName}
           </CardTitle>
-          <CardDescription className="text-md">{user.username}</CardDescription>
+          <CardDescription className="text-md">
+            <Link href={`/user/${user._id}`}>{user.username}</Link>
+          </CardDescription>
+          {(user.instruments.length > 0 || user.skills.length > 0) && (
+            <span className="tracking-wide text-neutral-400 text-xs">
+              Artist
+            </span>
+          )}
         </div>
         {isCurrentUserReqUser && (
           <DropdownMenu>
@@ -140,17 +150,10 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-        {pathname.includes("discover") && (
-          <div className="ml-auto flex flex-row gap-3">
-            {(user.instruments.length > 0 || user.skills.length > 0) && (
-              <Badge className="tracking-wide">Artist</Badge>
-            )}
-
-            <Link href={`/user/${user._id}`}>
-              <Button variant="outline">
-                <CircleUserRound />
-              </Button>
-            </Link>
+        {!isCurrentUserReqUser && (
+          <div className="flex flex-row gap-1 items-center ml-auto">
+            {/* <span>Profile Match: </span> */}
+            <ProfileMatchStat data={user.similarity} />
           </div>
         )}
       </CardHeader>
@@ -171,11 +174,18 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
             <Badge key={index}>{genre}</Badge>
           ))}
         </div>
+        <div id="favoriteArtists" className="flex flex-wrap gap-3">
+          {user?.favoriteArtists.map((artist, index) => (
+            <Badge key={index}>{artist}</Badge>
+          ))}
+        </div>
       </CardContent>
       <CardFooter className="flex flex-col items-start gap-3">
         <div className="flex gap-8">
           <span>{user.followers.length} followers</span>
-          <span>{user.following.length} following</span>
+          {!pathname.includes("discover") && (
+            <span>{user.following.length} following</span>
+          )}
         </div>
 
         {!isCurrentUserReqUser && (

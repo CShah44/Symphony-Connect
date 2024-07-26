@@ -16,7 +16,7 @@ const CommunityStats = ({
   totalUsers: number;
 }) => {
   return (
-    <Card className="mx-auto w-11/12 col-span-1 rounded-2xl p-4 hidden sm:block bg-transparent">
+    <Card className="mx-auto w-11/12 col-span-1 rounded-2xl p-4 bg-transparent">
       <CardHeader className="text-xl font-bold my-1 text-left">
         What's Trending?
         <CardDescription className="text-left font-normal">

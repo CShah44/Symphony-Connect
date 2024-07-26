@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: "Symphony Connect",
   description: "A musical community app!",
   icons: {
-    icon: "/logo.png",
+    icon: "/favicon.png",
   },
 };
 

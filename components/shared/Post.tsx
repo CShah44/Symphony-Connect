@@ -28,7 +28,7 @@ import {
   likeUnlike,
   repost,
 } from "@/lib/actions/post.action";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
 import CommentsContainer from "./CommentsContainer";
 import { formatDateTime } from "@/lib/utils";
@@ -42,14 +42,20 @@ const Post = ({
   setPosts: Dispatch<SetStateAction<any>>;
   posts: IPostFeed[];
 }) => {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const [isAddingComment, setIsAddingComment] = useState(false);
 
-  const isLiked = post.likes.find(
-    (id: string) => id === user?.publicMetadata?.userId
-  );
+  const [liked, setLiked] = useState(false);
 
-  const [liked, setLiked] = useState(isLiked || false);
+  useEffect(() => {
+    if (isLoaded) {
+      setLiked(
+        !!post.likes.find(
+          (id: string) => id === user?.publicMetadata?.userId
+        ) || false
+      );
+    }
+  }, [isLoaded]);
 
   const handleLikeUnlike = async () => {
     await likeUnlike(post._id, user?.publicMetadata?.userId, "/feed");

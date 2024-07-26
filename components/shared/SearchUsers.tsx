@@ -15,7 +15,7 @@ export const SearchUsers = () => {
     // stop the default form submission http request from happening
     <form
       action={() => router.push(pathname + "?search=" + search)}
-      className="w-full mt-4 mx-auto flex flex-row gap-1 items-center"
+      className="w-full mt-4 mx-auto flex flex-row gap-1 items-center px-4 sm:px-0"
     >
       <Input
         type="search"
