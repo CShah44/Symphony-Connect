@@ -1,23 +1,18 @@
 import CommunityStats from "@/components/shared/CommunityStats";
 import FeedContainer from "@/components/shared/Feed";
 import RecommendedUsers from "@/components/shared/RecommendedUsers";
+import Stories from "@/components/shared/Stories";
 import { Button } from "@/components/ui/button";
-import {
-  getMostPopularArtists,
-  getMostPopularGenres,
-  getRecommendedUsers,
-} from "@/lib/actions/utility.action";
-import { clerkClient } from "@clerk/nextjs/server";
+import { getStories } from "@/lib/actions/story.action";
+import { getCurrentUser } from "@/lib/actions/user.action";
+import { getRecommendedUsers } from "@/lib/actions/utility.action";
 import { CirclePlus, MessageSquare, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
 const Feed = async () => {
-  // todo change to recommended users
   const users = await getRecommendedUsers();
-
-  const popularArtists: string[] = await getMostPopularArtists();
-  const popularGenres: string[] = await getMostPopularGenres();
-  const totalUsers: number = await clerkClient().users.getCount();
+  const stories = await getStories();
+  const currentUser = await getCurrentUser();
 
   return (
     <>
@@ -31,13 +26,12 @@ const Feed = async () => {
       </div>
       <div className="lg:grid lg:grid-cols-4 lg:gap-1 lg:items-start">
         <div className="hidden lg:block">
-          <CommunityStats
-            popularArtists={popularArtists}
-            popularGenres={popularGenres}
-            totalUsers={totalUsers}
-          />
+          <CommunityStats />
         </div>
-        <FeedContainer />
+        <div className="col-span-2 md:w-[650px] w-full mx-auto">
+          <Stories stories={stories} currUserId={currentUser?._id} />
+          <FeedContainer />
+        </div>
         <div className="hidden lg:block">
           <RecommendedUsers users={users} />
         </div>

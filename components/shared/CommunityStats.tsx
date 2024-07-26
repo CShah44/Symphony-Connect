@@ -1,20 +1,21 @@
 import {
+  getMostPopularArtists,
+  getMostPopularGenres,
+} from "@/lib/actions/utility.action";
+import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
 } from "../ui/card";
+import { clerkClient } from "@clerk/nextjs/server";
 
-const CommunityStats = ({
-  popularArtists,
-  popularGenres,
-  totalUsers,
-}: {
-  popularArtists: string[];
-  popularGenres: string[];
-  totalUsers: number;
-}) => {
+const CommunityStats = async () => {
+  const popularArtists: string[] = await getMostPopularArtists();
+  const popularGenres: string[] = await getMostPopularGenres();
+  const totalUsers: number = await clerkClient().users.getCount();
+
   return (
     <Card className="mx-auto w-11/12 col-span-1 rounded-2xl p-4 bg-transparent">
       <CardHeader className="text-xl font-bold my-1 text-left">

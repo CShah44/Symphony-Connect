@@ -39,7 +39,7 @@ const FeedContainer = ({ id }: { id?: string }) => {
     );
 
   return (
-    <div className="col-span-2 my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto">
+    <div className="my-4 p-4 w-full flex flex-col justify-center">
       {posts.length > 0 && !loading && (
         <Tabs defaultValue="All">
           <TabsList className="w-full bg-transparent mb-3  flex gap-4">
