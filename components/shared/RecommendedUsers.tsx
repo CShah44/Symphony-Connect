@@ -1,4 +1,3 @@
-import { IUser } from "@/lib/database/models/user.model";
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import Link from "next/link";
@@ -8,8 +7,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { getRecommendedUsers } from "@/lib/actions/utility.action";
+import { IUser } from "@/lib/database/models/user.model";
 
-const RecommendedUsers = ({ users }: { users: IUser[] }) => {
+const RecommendedUsers = async () => {
+  const users = await getRecommendedUsers();
+
   return (
     <TooltipProvider>
       <Card className="mx-auto w-11/12 col-span-1 rounded-2xl p-4 bg-transparent">
@@ -17,7 +20,7 @@ const RecommendedUsers = ({ users }: { users: IUser[] }) => {
           Who to follow
         </CardHeader>
         <CardContent className="grid gap-3 p-1">
-          {users.map((user) => (
+          {users.map((user: IUser) => (
             <div
               key={user._id}
               className="rounded-xl bg-zinc-950 hover:bg-zinc-800 shadow-md p-4 w-full flex flex-col items-start"

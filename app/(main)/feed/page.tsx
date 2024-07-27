@@ -5,12 +5,10 @@ import Stories from "@/components/shared/Stories";
 import { Button } from "@/components/ui/button";
 import { getStories } from "@/lib/actions/story.action";
 import { getCurrentUser } from "@/lib/actions/user.action";
-import { getRecommendedUsers } from "@/lib/actions/utility.action";
 import { CirclePlus, MessageSquare, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
 const Feed = async () => {
-  const users = await getRecommendedUsers();
   const stories = await getStories();
   const currentUser = await getCurrentUser();
 
@@ -33,7 +31,7 @@ const Feed = async () => {
           <FeedContainer />
         </div>
         <div className="hidden lg:block">
-          <RecommendedUsers users={users} />
+          <RecommendedUsers />
         </div>
       </div>
       <Link href="/create">

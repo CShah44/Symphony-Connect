@@ -60,7 +60,7 @@ export const deleteStoryCron = async () => {
     const now = new Date();
 
     // TODO: change expiry date to 1 day after testing
-    const expiryDate = new Date(now.getTime() - 30 * 60 * 1000);
+    const expiryDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
     await Story.deleteMany({ createdAt: { $lt: expiryDate } });
 
