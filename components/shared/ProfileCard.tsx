@@ -89,7 +89,7 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
 
       toast({
         title: "JAM request sent",
-        description: `You've sent a JAM request to this ${user?.firstName}`,
+        description: `You've sent a JAM request to ${user?.firstName}`,
         variant: "default",
       });
     } catch (error) {
