@@ -74,7 +74,7 @@ const CreateStoryForm = () => {
           name="text"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Share your moment {`, ${user?.firstName}`}?</FormLabel>
+              <FormLabel>Share your moment {`, ${user?.firstName}`}!</FormLabel>
               <FormControl>
                 <Textarea {...field} />
               </FormControl>
