@@ -100,13 +100,15 @@ export default function Stories({
               <p>{story.text}</p>
             </div>
             <DialogFooter>
-              <Button
-                variant="outline"
-                className="ml-auto"
-                onClick={() => handleDeleteStory(story._id)}
-              >
-                <Trash size={16} />
-              </Button>
+              {currUserId === story.postedBy._id && (
+                <Button
+                  variant="outline"
+                  className="ml-auto"
+                  onClick={() => handleDeleteStory(story._id)}
+                >
+                  <Trash size={16} />
+                </Button>
+              )}
             </DialogFooter>
           </DialogContent>
         </Dialog>

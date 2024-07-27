@@ -4,13 +4,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, SendIcon } from "lucide-react";
 import { IMessage } from "@/lib/database/models/message.model";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { pusherClient } from "@/lib/pusher/pusherClient";
 import { Input } from "../ui/input";
 import { sendMessage } from "@/lib/actions/chat.action";
 import { toast } from "../ui/use-toast";
 import { IConversation } from "@/lib/database/models/conversation.model";
+import { formatDateTime } from "@/lib/utils";
 
 export default function MessageContainer({
   messages: preLoadedMessages,
@@ -129,21 +129,25 @@ const Message = ({
 }) => {
   return (
     <div
-      className={`flex items-start gap-4 ${
+      className={`flex items-start ${
         ownMessage ? "justify-end" : "justify-start"
       }`}
     >
-      <Image
-        src={message.sender.photo}
-        alt={message.sender.firstName}
-        width={40}
-        height={40}
-        className="rounded-full"
-      />
-      <div className="grid gap-1 bg-primary text-primary-foreground p-3 rounded-lg max-w-[75%]">
-        <p className="text-sm">{message.text}</p>
+      <div
+        className={`flex flex-col gap-2 max-w-[75%] ${
+          ownMessage ? "items-end" : "items-start"
+        }`}
+      >
+        <div className="text-sm bg-primary text-primary-foreground p-3 rounded-lg">
+          {message.text}
+        </div>
+        <div className="text-xs">
+          {message.sender.firstName},
+          <span className="text-neutral-400 ml-1">
+            {formatDateTime(message.createdAt).dateTime}
+          </span>
+        </div>
       </div>
-      <span>{message.sender.firstName}</span>
     </div>
   );
 };

@@ -14,6 +14,7 @@ export interface IMessage extends Document {
     username: string;
   };
   photos?: string[];
+  createdAt: Date;
 }
 
 const messageSchema: Schema = new Schema(
