@@ -15,27 +15,41 @@ import CreateStoryForm from "./CreateStoryForm";
 import { IStory } from "@/lib/database/models/story.model";
 import { formatDateTime } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { deleteStory } from "@/lib/actions/story.action";
+import { deleteStory, getStories } from "@/lib/actions/story.action";
 import { toast } from "../ui/use-toast";
 import { useEffect, useState } from "react";
+import { Skeleton } from "../ui/skeleton";
 
-export default function Stories({
-  stories,
-  currUserId,
-}: {
-  stories: IStory[];
-  currUserId: string;
-}) {
+export default function Stories({ currUserId }: { currUserId: string }) {
   const [showPostIcon, setShowPostIcon] = useState(true);
+  const [stories, setStories] = useState<IStory[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStories = async () => {
+      const stories = await getStories();
+      setStories(stories);
+    };
+
+    fetchStories();
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     if (stories.length === 0) return;
-    setShowPostIcon(stories.some((story) => story.postedBy._id !== currUserId));
-  }, [stories]);
+
+    if (stories.some((story) => story.postedBy._id === currUserId)) {
+      setShowPostIcon(false);
+    }
+  }, [stories, currUserId]);
 
   const handleDeleteStory = async (storyId: string) => {
     try {
       const deletedStory = await deleteStory(storyId);
+      setStories((prevStories) =>
+        prevStories.filter((story) => story._id !== deletedStory._id)
+      );
+      setShowPostIcon(true);
 
       toast({
         title: "Deleted Story",
@@ -50,6 +64,8 @@ export default function Stories({
       });
     }
   };
+
+  if (loading) return <Skeleton className="w-11/12 mx-auto mt-4" />;
 
   return (
     <div
@@ -74,7 +90,7 @@ export default function Stories({
                 Share your moment with your friends.
               </DialogDescription>
             </DialogHeader>
-            <CreateStoryForm />
+            <CreateStoryForm setStories={setStories} />
           </DialogContent>
         </Dialog>
       )}

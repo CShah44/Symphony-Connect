@@ -3,13 +3,11 @@ import FeedContainer from "@/components/shared/Feed";
 import RecommendedUsers from "@/components/shared/RecommendedUsers";
 import Stories from "@/components/shared/Stories";
 import { Button } from "@/components/ui/button";
-import { getStories } from "@/lib/actions/story.action";
 import { getCurrentUser } from "@/lib/actions/user.action";
 import { CirclePlus, MessageSquare, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
 const Feed = async () => {
-  const stories = await getStories();
   const currentUser = await getCurrentUser();
 
   return (
@@ -27,7 +25,7 @@ const Feed = async () => {
           <CommunityStats />
         </div>
         <div className="col-span-2 md:w-[650px] w-full mx-auto">
-          <Stories stories={stories} currUserId={currentUser?._id} />
+          <Stories currUserId={currentUser?._id} />
           <FeedContainer />
         </div>
         <div className="hidden lg:block">

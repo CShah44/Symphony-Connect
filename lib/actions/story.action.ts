@@ -18,9 +18,13 @@ export const createStory = async (story: {
       images: story.imageUrls || [],
     });
 
-    revalidatePath("/feed");
+    const storyToSend = await Story.findById(newStory.id).populate({
+      path: "postedBy",
+      model: User,
+      select: "firstName photo username",
+    });
 
-    return JSON.parse(JSON.stringify(newStory));
+    return JSON.parse(JSON.stringify(storyToSend));
   } catch (error) {
     throw new Error("Could not create the story!");
   }

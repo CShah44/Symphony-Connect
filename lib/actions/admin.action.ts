@@ -7,7 +7,7 @@ import { clerkClient } from "@clerk/nextjs/server";
 export const checkRole = (role: Roles) => {
   const { sessionClaims }: any = auth();
 
-  return sessionClaims?.metadata.role === role;
+  return sessionClaims?.public_metadata.role === role;
 };
 
 export async function setRole(id: string, role: Roles) {

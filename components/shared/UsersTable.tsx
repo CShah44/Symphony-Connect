@@ -19,11 +19,15 @@ import { Button } from "@/components/ui/button";
 import { deleteUser, setRole } from "@/lib/actions/admin.action";
 import { MoveHorizontalIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
 
 const UsersTable = ({ users: usersProp }: any) => {
   const [users, setUsers] = useState(usersProp);
+
+  useEffect(() => {
+    setUsers(usersProp);
+  }, [usersProp]);
 
   const changeRole = (id: string, role: string) => {
     setUsers(
