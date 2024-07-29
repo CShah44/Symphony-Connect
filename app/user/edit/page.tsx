@@ -4,8 +4,6 @@ import {
   getOnboardData,
 } from "@/lib/actions/musicprofile.action";
 import Link from "next/link";
-import { getUserById } from "@/lib/actions/user.action";
-import { IUser } from "@/lib/database/models/user.model";
 import MusicProfileForm from "@/components/shared/MusicProfileForm";
 import { currentUser } from "@clerk/nextjs/server";
 import { Suspense } from "react";
@@ -18,14 +16,12 @@ type OnBoardData = {
   favoriteArtists: string[];
 };
 
-// here the use can edit the music profile
-// made this a server component
+// todo this gives error that user not found which shouln't be the case
 const EditProfile = async () => {
   const data: OnBoardData = await getOnboardData();
 
   const metadata = (await currentUser())!.publicMetadata;
   const isOnboarded = metadata.onboarded;
-  const dbUser: IUser | null = (await getUserById(metadata.userId)) || null;
 
   if (!isOnboarded) changeOnboardingStatus(true);
 
@@ -38,7 +34,7 @@ const EditProfile = async () => {
         </Link>
       </div>
       <Suspense fallback={<Skeleton className="w-[650px] h-[500px]" />}>
-        <MusicProfileForm currentUser={dbUser} data={data} />
+        <MusicProfileForm data={data} />
       </Suspense>
     </div>
   );

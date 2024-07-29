@@ -15,10 +15,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { updateMusicProfile } from "@/lib/actions/user.action";
+import {
+  getCurrentUser,
+  getUserById,
+  updateMusicProfile,
+} from "@/lib/actions/user.action";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/lib/database/models/user.model";
 import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
 
 const EditMusicProfileSchema = z.object({
   genres: z.array(z.string()),
@@ -33,10 +38,8 @@ const EditMusicProfileSchema = z.object({
 });
 
 const MusicProfileForm = ({
-  currentUser,
   data,
 }: {
-  currentUser: IUser | null;
   data: {
     genres: string[];
     instruments: string[];
@@ -45,6 +48,26 @@ const MusicProfileForm = ({
   };
 }) => {
   const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const loggedInUser = await getCurrentUser();
+
+        if (!loggedInUser) return;
+
+        setCurrentUser(loggedInUser);
+      } catch (error) {
+        console.log("Could not get the user, maybe onboarding is not complete");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    setTimeout(getUser, 1500);
+  }, []);
 
   const form = useForm<z.infer<typeof EditMusicProfileSchema>>({
     resolver: zodResolver(EditMusicProfileSchema),
@@ -78,6 +101,8 @@ const MusicProfileForm = ({
       });
     }
   }
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <Form {...form}>

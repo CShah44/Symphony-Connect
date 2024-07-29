@@ -24,6 +24,7 @@ import {
 } from "../ui/dialog";
 import { useRouter } from "next/navigation";
 
+// todo fix the deleting system
 export default function MessageContainer({
   messages: preLoadedMessages,
   userId,
@@ -113,6 +114,7 @@ export default function MessageContainer({
             variant: "default",
           });
 
+          router.push("/chat");
           return;
         }
 
@@ -188,13 +190,15 @@ export default function MessageContainer({
                 Delete {conversation.type === "group" ? "group" : "contact"}
               </Button>
             )}
-            <Button
-              className="text-sm mt-3 w-[150px] mx-auto"
-              variant={"destructive"}
-              onClick={() => handleRemoveParticipant(userId!)}
-            >
-              Leave {conversation.type === "group" ? "group" : "contact"}
-            </Button>
+            {conversation.type === "group" && (
+              <Button
+                className="text-sm mt-3 w-[150px] mx-auto"
+                variant={"destructive"}
+                onClick={() => handleRemoveParticipant(userId!)}
+              >
+                Leave group
+              </Button>
+            )}
           </DialogContent>
         </Dialog>
       </div>
