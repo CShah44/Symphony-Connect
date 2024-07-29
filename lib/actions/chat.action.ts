@@ -243,3 +243,75 @@ export const sendJamRequest = async (userId: string, otherUserId: string) => {
     throw new Error("Could not send the JAM request in database");
   }
 };
+
+export const deleteConversation = async (conversationId: string) => {
+  try {
+    await connect();
+
+    const conversation: IConversation | null = await Conversation.findById(
+      conversationId
+    );
+
+    if (!conversation) {
+      throw new Error("Conversation not found");
+    }
+
+    // delete messages with that conversation id
+    await Message.deleteMany({ conversation: conversationId });
+
+    await conversation.deleteOne();
+
+    revalidatePath("/chat");
+    return JSON.parse(JSON.stringify({ message: "Conversation deleted" }));
+  } catch (error) {
+    console.log(error);
+    throw new Error("Could not delete the conversation in database");
+  }
+};
+
+export const removeParticipant = async (
+  conversationId: string,
+  participantId: string
+) => {
+  try {
+    await connect();
+
+    const conversation: IConversation | null =
+      await Conversation.findByIdAndUpdate(conversationId, {
+        $pull: {
+          participants: participantId,
+        },
+        new: true,
+      });
+
+    if (!conversation) {
+      throw new Error("Conversation not found");
+    }
+
+    revalidatePath(`/chat/${conversationId}`);
+    return JSON.parse(JSON.stringify({ message: "Participant removed" }));
+  } catch (error) {
+    console.log(error);
+    throw new Error("Could not remove the participant in database");
+  }
+};
+
+export const updateConversation = async (conversationId: string, data: any) => {
+  try {
+    await connect();
+
+    const updatedConversation = await Conversation.findByIdAndUpdate(
+      conversationId,
+      data,
+      {
+        new: true,
+      }
+    );
+
+    revalidatePath(`/chat/${conversationId}`);
+    return JSON.parse(JSON.stringify(updatedConversation));
+  } catch (error) {
+    console.log(error);
+    throw new Error("Could not update the conversation in database");
+  }
+};

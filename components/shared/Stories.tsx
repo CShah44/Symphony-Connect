@@ -19,6 +19,14 @@ import { deleteStory, getStories } from "@/lib/actions/story.action";
 import { toast } from "../ui/use-toast";
 import { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../ui/carousel";
+import { Card, CardContent } from "../ui/card";
 
 export default function Stories({ currUserId }: { currUserId: string }) {
   const [showPostIcon, setShowPostIcon] = useState(true);
@@ -115,6 +123,29 @@ export default function Stories({ currUserId }: { currUserId: string }) {
             <div className="space-y-4">
               <p>{story.text}</p>
             </div>
+            {story.images && story.images.length > 0 && (
+              <Carousel className="w-full mx-auto">
+                <CarouselContent>
+                  {story?.images.map((url: string) => (
+                    <CarouselItem key={url}>
+                      <div className="p-1">
+                        <Card>
+                          <CardContent className="flex aspect-video items-center justify-center p-6">
+                            <img
+                              src={url}
+                              alt={url}
+                              className="object-contain h-full w-full"
+                            />
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
+            )}
             <DialogFooter>
               {currUserId === story.postedBy._id && (
                 <Button

@@ -9,6 +9,7 @@ import {
   SignInButton,
   SignOutButton,
   SignUpButton,
+  useClerk,
   useUser,
 } from "@clerk/nextjs";
 import { Menu } from "lucide-react";
@@ -20,7 +21,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from "next/image";
 import { Avatar, AvatarImage } from "./avatar";
 
 export const FloatingNav = ({ className }: { className?: string }) => {

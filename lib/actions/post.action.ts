@@ -3,8 +3,9 @@
 
 import { revalidatePath } from "next/cache";
 import { connect } from "../database";
-import Post, { IPost } from "../database/models/post.model";
+import Post, { IPost, IPostFeed } from "../database/models/post.model";
 import User, { IUser } from "../database/models/user.model";
+import { generateTextFromImage, recommendedPosts } from "./utility.action";
 
 export async function createPost(post: {
   text: string;
@@ -35,7 +36,7 @@ export async function createPost(post: {
 export async function getPosts() {
   try {
     await connect();
-    const posts = await Post.find()
+    const posts: IPostFeed[] | null = await Post.find()
       .populate({
         path: "postedBy",
         model: User,
@@ -48,7 +49,9 @@ export async function getPosts() {
       })
       .sort({ createdAt: -1 });
 
-    return JSON.parse(JSON.stringify(posts));
+    const recommendations = await recommendedPosts(posts);
+
+    return JSON.parse(JSON.stringify(recommendations));
   } catch (error) {
     console.log(error);
     throw new Error("Could not fetch the posts!");

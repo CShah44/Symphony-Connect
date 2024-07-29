@@ -8,6 +8,7 @@ export interface IStory {
     photo: string;
     firstName: string;
   };
+  images?: string[];
   createdAt: Date;
   text: string;
 }

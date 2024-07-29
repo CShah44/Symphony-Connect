@@ -1,7 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-// todo add public and private routes
 const publicRoutes = createRouteMatcher([
   "/",
   "/sign-in(.*)",

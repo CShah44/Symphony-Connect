@@ -1,6 +1,9 @@
+"use server";
+
 import User, { IUser } from "../database/models/user.model";
-import { sentenceSimilarity } from "@huggingface/inference";
+import { sentenceSimilarity, imageToText } from "@huggingface/inference";
 import { getCurrentUser, getUsers } from "./user.action";
+import { IPostFeed } from "../database/models/post.model";
 
 export const getMostPopularGenres = async () => {
   try {
@@ -34,6 +37,7 @@ export const getMostPopularArtists = async () => {
   }
 };
 
+// todo caching here
 export async function calculateProfileMatch(user1: IUser, user2: IUser) {
   if (!user1 || !user2) return 0;
 
@@ -67,32 +71,140 @@ export async function calculateProfileMatch(user1: IUser, user2: IUser) {
   }
 }
 
+export async function generateSimilarityScore(
+  postContent: string,
+  userPreferences: string
+) {
+  if (!postContent || !userPreferences) return 0;
+
+  try {
+    const similarity = await sentenceSimilarity({
+      accessToken: process.env.HF_TOKEN,
+      model: "sentence-transformers/all-MiniLM-L6-v2",
+      inputs: {
+        source_sentence: postContent,
+        sentences: [userPreferences],
+      },
+    });
+
+    const score = Math.round(similarity[0] * 100);
+
+    return JSON.parse(JSON.stringify(score));
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error calculating profile match");
+  }
+}
+
 // now we need to get the recommended users based on the user's profile
 // we will use the calculateProfileMatch function to calculate the similarity between the user's profile and the recommended users
 // and then sort the recommended users based on the similarity score
 export const getRecommendedUsers = async (query?: string, tag?: string) => {
   try {
-    const users: IUser[] = await getUsers(query, tag);
-    const currentUser: IUser = await getCurrentUser();
+    let cachedRecommendedUsers: IUser[] = (global as any).recommendedUsers;
 
-    let nonMatchingUsers: IUser[] = [];
-    let recommendedUsers: IUser[] = [];
+    if (cachedRecommendedUsers?.length > 0) {
+      return JSON.parse(JSON.stringify(cachedRecommendedUsers));
+    } else {
+      const users: IUser[] = await getUsers(query, tag);
+      const currentUser: IUser = await getCurrentUser();
 
-    for (const user of users) {
-      const similarity = await calculateProfileMatch(user, currentUser);
-      user.similarity = similarity;
+      let nonMatchingUsers: IUser[] = [];
+      let recommendedUsers: IUser[] = [];
 
-      if (similarity > 60) {
-        recommendedUsers.push(user);
-      } else {
-        nonMatchingUsers.push(user);
+      for (const user of users) {
+        const similarity = await calculateProfileMatch(user, currentUser);
+        user.similarity = similarity;
+
+        if (similarity > 60) {
+          recommendedUsers.push(user);
+        } else {
+          nonMatchingUsers.push(user);
+        }
       }
+
+      cachedRecommendedUsers = (global as any).recommendedUsers = [
+        ...recommendedUsers,
+        ...nonMatchingUsers,
+      ];
     }
 
-    return JSON.parse(
-      JSON.stringify([...recommendedUsers, ...nonMatchingUsers])
-    );
+    return JSON.parse(JSON.stringify(cachedRecommendedUsers));
   } catch (error) {
     throw new Error("Error calculating profile match");
+  }
+};
+
+export const generateTextFromImage = async (imageUrl: string) => {
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+
+    const text = await imageToText({
+      accessToken: process.env.HF_TOKEN,
+      model: "Salesforce/blip-image-captioning-large",
+      data: blob,
+    });
+
+    return JSON.parse(JSON.stringify(text));
+  } catch (error) {
+    console.log(error);
+    throw new Error("Could not generate text from image!");
+  }
+};
+
+export const recommendedPosts = async (posts: IPostFeed[]) => {
+  try {
+    let cachedRecommendedPosts: IPostFeed[] = (global as any).recommendedPosts;
+
+    if (
+      cachedRecommendedPosts?.length > 0 &&
+      cachedRecommendedPosts?.length === posts.length
+    ) {
+      return JSON.parse(JSON.stringify(cachedRecommendedPosts));
+    } else {
+      const user: IUser = await getCurrentUser();
+      const recommendedPosts: IPostFeed[] = [];
+      const unrelatedPosts: IPostFeed[] = [];
+
+      for (const post of posts) {
+        let userPreferences = `
+      ${user.genres.join(" ")}
+      ${user.skills.join(" ")}
+      ${user.instruments.join(" ")}
+      ${user.favoriteArtists.join(" ")}
+    `;
+
+        let postContent = `${post.text} ${post.type}`;
+
+        if (post.imageUrls?.length > 0) {
+          for (const imageUrl of post.imageUrls) {
+            const imageText = await generateTextFromImage(imageUrl);
+            postContent += ` ${imageText}`;
+          }
+        }
+
+        const score = await generateSimilarityScore(
+          postContent,
+          userPreferences
+        );
+
+        if (score > 60) {
+          recommendedPosts.push(post);
+        } else {
+          unrelatedPosts.push(post);
+        }
+      }
+
+      cachedRecommendedPosts = (global as any).recommendedPosts = [
+        ...recommendedPosts,
+        ...unrelatedPosts,
+      ];
+    }
+
+    return JSON.parse(JSON.stringify(cachedRecommendedPosts));
+  } catch (error) {
+    console.error("Error getting recommended posts:", error);
+    throw new Error("Error getting recommended posts");
   }
 };

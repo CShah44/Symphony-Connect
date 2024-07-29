@@ -51,7 +51,6 @@ export interface IComment {
   userProfilePic: string;
 }
 
-// todo store only id of user in comment
 const postSchema = new Schema(
   {
     postedBy: {

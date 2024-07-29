@@ -7,10 +7,22 @@ import { IMessage } from "@/lib/database/models/message.model";
 import { useEffect, useRef, useState } from "react";
 import { pusherClient } from "@/lib/pusher/pusherClient";
 import { Input } from "../ui/input";
-import { sendMessage } from "@/lib/actions/chat.action";
+import {
+  deleteConversation,
+  removeParticipant,
+  sendMessage,
+  updateConversation,
+} from "@/lib/actions/chat.action";
 import { toast } from "../ui/use-toast";
 import { IConversation } from "@/lib/database/models/conversation.model";
 import { formatDateTime } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { useRouter } from "next/navigation";
 
 export default function MessageContainer({
   messages: preLoadedMessages,
@@ -24,6 +36,7 @@ export default function MessageContainer({
   const [messages, setMessages] = useState(preLoadedMessages);
   const conversationId = conversation._id;
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     pusherClient.subscribe(conversationId);
@@ -66,6 +79,71 @@ export default function MessageContainer({
     }
   }
 
+  const isUserAdmin = conversation.createdBy._id === userId;
+
+  const handleDeleteConversation = async () => {
+    try {
+      await deleteConversation(conversation._id);
+
+      toast({
+        title: "Conversation deleted",
+        description: "Conversation deleted successfully",
+        variant: "default",
+      });
+      router.push("/chat");
+    } catch (error) {
+      toast({
+        title: "Oops!",
+        description: "Could not delete conversation! Try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRemoveParticipant = async (participantId: string) => {
+    try {
+      // if user is the creator of the conversation, then remove him and update the createdBy
+      if (participantId === conversation.createdBy._id) {
+        if (conversation.participants.length === 2) {
+          await deleteConversation(conversation._id);
+
+          toast({
+            title: "Conversation deleted since only 1 participant left",
+            description: "Conversation deleted successfully",
+            variant: "default",
+          });
+
+          return;
+        }
+
+        await updateConversation(conversation._id, {
+          createdBy: conversation.participants[1]._id,
+        });
+
+        toast({
+          title: "Admin changed",
+          description: "Admin changed successfully",
+          variant: "default",
+        });
+      }
+
+      await removeParticipant(conversation._id, participantId);
+      toast({
+        title: "Participant removed",
+        description: "Participant removed successfully",
+        variant: "default",
+      });
+
+      router.push("/chat");
+    } catch (error) {
+      toast({
+        title: "Oops!",
+        description: "Could not remove participant! Try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col border h-screen sm:h-[80vh] w-full md:w-10/12 lg:w-8/12 mx-auto rounded-3xl">
       <div className="shadow-2xl rounded-3xl w-full p-4 flex items-center gap-4 mx-auto">
@@ -77,19 +155,48 @@ export default function MessageContainer({
           <ArrowLeftIcon className="w-5 h-5" />
           <span className="font-medium">Back</span>
         </Link>
-        <h2 className="text-lg font-medium  text-center flex-1">{convName}</h2>
-        <h2 className="text-lg font-medium  text-center flex-1">
-          {/* todo make it drawer, can display/edit participants, also show grp photo and all  */}
-          {conversation.type === "group" &&
-            conversation.participants.map((participant) => (
-              <span
-                className="font-sm text-zinc-500 mr-2"
-                key={participant._id}
+
+        <Dialog>
+          <DialogTrigger className="text-lg font-medium  mx-auto flex-1">
+            {convName}
+          </DialogTrigger>
+          <DialogContent className="text-lg font-medium flex-1">
+            <DialogTitle className="text-lg font-medium  text-center flex-1">
+              {convName}
+            </DialogTitle>
+            {conversation.type === "group" && <h2>Participants</h2>}
+            {conversation.type === "group" &&
+              conversation.participants.map((participant) => (
+                <div
+                  className="font-sm text-zinc-500 mr-2 flex justify-between"
+                  key={participant._id}
+                >
+                  <span>
+                    {participant.firstName} {participant.lastName}
+                  </span>
+                  <span>
+                    {conversation.createdBy._id === participant._id && "Admin"}
+                  </span>
+                </div>
+              ))}
+            {isUserAdmin && (
+              <Button
+                className="text-sm mt-3 w-[150px] mx-auto"
+                variant={"destructive"}
+                onClick={handleDeleteConversation}
               >
-                {participant.firstName} {participant.lastName}
-              </span>
-            ))}
-        </h2>
+                Delete {conversation.type === "group" ? "group" : "contact"}
+              </Button>
+            )}
+            <Button
+              className="text-sm mt-3 w-[150px] mx-auto"
+              variant={"destructive"}
+              onClick={() => handleRemoveParticipant(userId!)}
+            >
+              Leave {conversation.type === "group" ? "group" : "contact"}
+            </Button>
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="flex-1 overflow-auto p-4">
         <div className="grid gap-4">

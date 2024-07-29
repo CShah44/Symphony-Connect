@@ -175,6 +175,7 @@ const Post = ({
     }
   };
 
+  // todo add timestamp of post
   return (
     <Card className="text-left w-full h-auto">
       <CardHeader>

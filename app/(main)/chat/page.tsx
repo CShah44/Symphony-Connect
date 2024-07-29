@@ -60,8 +60,8 @@ const ChatHome = async () => {
               className="block"
               key={conversation._id}
             >
-              <Card className="hover:bg-muted/20 transition-colors text-left">
-                <CardContent className="p-4">
+              <Card className="hover:bg-muted/20 transition-colors text-left pt-4">
+                <CardContent className="">
                   <div className="flex items-center justify-start gap-2 mb-2">
                     <Image
                       src={convPhoto}
@@ -82,9 +82,9 @@ const ChatHome = async () => {
                       .join(", ")}
                   </p>
                 </CardContent>
-                <CardFooter className="text-left w-full">
+                <CardFooter className="">
                   {conversation.lastMessage.text && (
-                    <div className="flex text-left w-full gap-1 text-xs mr-auto">
+                    <div className="flex text-left w-full gap-1 text-xs mr-auto text-neutral-200">
                       <div>{conversation.lastMessage.sender}: </div>
                       <div>
                         <span>
