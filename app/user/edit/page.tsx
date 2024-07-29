@@ -5,7 +5,7 @@ import {
 } from "@/lib/actions/musicprofile.action";
 import Link from "next/link";
 import MusicProfileForm from "@/components/shared/MusicProfileForm";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -20,7 +20,7 @@ type OnBoardData = {
 const EditProfile = async () => {
   const data: OnBoardData = await getOnboardData();
 
-  const metadata = (await currentUser())!.publicMetadata;
+  const metadata = auth()!.sessionClaims!.public_metadata;
   const isOnboarded = metadata.onboarded;
 
   if (!isOnboarded) changeOnboardingStatus(true);

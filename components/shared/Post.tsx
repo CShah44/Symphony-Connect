@@ -217,6 +217,9 @@ const Post = ({
             </button>
           )}
         </CardTitle>
+        <span className="text-neutral-300 text-xs my-2">
+          {formatDateTime(post.createdAt!).dateTime}
+        </span>
         {post.type != "Post" && (
           <CardDescription className="my-2">
             {post.type.toString() != "Post" ? post.type : ""}
