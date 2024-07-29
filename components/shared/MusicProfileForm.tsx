@@ -52,22 +52,23 @@ const MusicProfileForm = ({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getUser = async () => {
+    const interval = setInterval(async () => {
       try {
         const loggedInUser = await getCurrentUser();
 
         if (!loggedInUser) return;
 
-        setCurrentUser(loggedInUser);
+        if (loggedInUser !== null && loggedInUser !== undefined) {
+          setCurrentUser(loggedInUser);
+          setLoading(false);
+        }
       } catch (error) {
         console.log("Could not get the user, maybe onboarding is not complete");
-      } finally {
-        setLoading(false);
       }
-    };
+    }, 1500);
 
-    setTimeout(getUser, 3500);
-  }, []);
+    return () => clearInterval(interval);
+  }, [currentUser]);
 
   const form = useForm<z.infer<typeof EditMusicProfileSchema>>({
     resolver: zodResolver(EditMusicProfileSchema),
@@ -102,7 +103,7 @@ const MusicProfileForm = ({
     }
   }
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Creating Your account... please wait</div>;
 
   return (
     <Form {...form}>
