@@ -91,6 +91,8 @@ export async function createUser(user: any) {
 
     const newUser = await User.create(user);
 
+    revalidatePath("/user/edit");
+    revalidatePath("/feed");
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
     throw new Error("Could not create the user in database");

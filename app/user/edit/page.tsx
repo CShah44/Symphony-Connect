@@ -21,7 +21,7 @@ const EditProfile = async () => {
   const data: OnBoardData = await getOnboardData();
 
   const metadata = auth()!.sessionClaims!.public_metadata;
-  const isOnboarded = metadata.onboarded;
+  const isOnboarded = metadata.onboarded || false;
 
   if (!isOnboarded) changeOnboardingStatus(true);
 

@@ -84,8 +84,12 @@ export const getOnboardData = async () => {
 export const changeOnboardingStatus = async (status: boolean) => {
   try {
     await connect();
-    clerkClient().users.updateUserMetadata(auth().userId || "", {
+
+    const user = await clerkClient().users.getUser(auth().userId || "");
+
+    await clerkClient().users.updateUserMetadata(auth().userId || "", {
       publicMetadata: {
+        ...user.publicMetadata,
         onboarded: status,
       },
     });

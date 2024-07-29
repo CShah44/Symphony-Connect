@@ -66,7 +66,7 @@ const MusicProfileForm = ({
       }
     };
 
-    setTimeout(getUser, 1500);
+    setTimeout(getUser, 3500);
   }, []);
 
   const form = useForm<z.infer<typeof EditMusicProfileSchema>>({
