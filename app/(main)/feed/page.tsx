@@ -9,7 +9,6 @@ import Link from "next/link";
 
 const Feed = async () => {
   const currentUser = await getCurrentUser();
-
   return (
     <>
       <div className="lg:hidden block">

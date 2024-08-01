@@ -1,12 +1,18 @@
 import ProfileCard from "@/components/shared/ProfileCard";
 import { SearchUsers } from "@/components/shared/SearchUsers";
+import { getUsers } from "@/lib/actions/user.action";
 import { getRecommendedUsers } from "@/lib/actions/utility.action";
 import { IUser } from "@/lib/database/models/user.model";
 
 const Discover = async (params: { searchParams: { search?: string } }) => {
   const query = params.searchParams?.search;
 
-  const users: IUser[] = await getRecommendedUsers(query);
+  let users: IUser[] = [];
+
+  if (query) users = await getUsers(query);
+  else {
+    users = await getRecommendedUsers();
+  }
 
   return (
     <div className="md:w-[650px] w-full mx-auto text-left ">

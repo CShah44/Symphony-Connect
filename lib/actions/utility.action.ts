@@ -127,9 +127,8 @@ export const getRecommendedUsers = async (query?: string, tag?: string) => {
         ...recommendedUsers,
         ...nonMatchingUsers,
       ];
+      return JSON.parse(JSON.stringify(cachedRecommendedUsers));
     }
-
-    return JSON.parse(JSON.stringify(cachedRecommendedUsers));
   } catch (error) {
     throw new Error("Error calculating profile match");
   }

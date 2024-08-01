@@ -26,7 +26,7 @@ const Chat = async ({ params }: { params: { id: string } }) => {
       redirect(`/chat/${isMutual._id}`);
     } else {
       const newConversation = await createConversation(
-        [params.id, sessionClaims?.public_metadata?.userId!],
+        [sessionClaims?.public_metadata?.userId!, params.id],
         `${params.id} ${sessionClaims?.public_metadata?.userId}`,
         "contact"
       );

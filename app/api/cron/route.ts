@@ -16,6 +16,7 @@ export async function GET() {
       message: "Successfully deleted stories!",
     });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 }

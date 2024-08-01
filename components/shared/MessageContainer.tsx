@@ -7,12 +7,7 @@ import { IMessage } from "@/lib/database/models/message.model";
 import { useEffect, useRef, useState } from "react";
 import { pusherClient } from "@/lib/pusher/pusherClient";
 import { Input } from "../ui/input";
-import {
-  deleteConversation,
-  removeParticipant,
-  sendMessage,
-  updateConversation,
-} from "@/lib/actions/chat.action";
+import { sendMessage } from "@/lib/actions/chat.action";
 import { toast } from "../ui/use-toast";
 import { IConversation } from "@/lib/database/models/conversation.model";
 import { formatDateTime } from "@/lib/utils";
@@ -82,70 +77,6 @@ export default function MessageContainer({
 
   const isUserAdmin = conversation.createdBy._id === userId;
 
-  const handleDeleteConversation = async () => {
-    try {
-      await deleteConversation(conversation._id);
-
-      toast({
-        title: "Conversation deleted",
-        description: "Conversation deleted successfully",
-        variant: "default",
-      });
-      router.push("/chat");
-    } catch (error) {
-      toast({
-        title: "Oops!",
-        description: "Could not delete conversation! Try again later.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleRemoveParticipant = async (participantId: string) => {
-    try {
-      // if user is the creator of the conversation, then remove him and update the createdBy
-      if (participantId === conversation.createdBy._id) {
-        if (conversation.participants.length === 2) {
-          await deleteConversation(conversation._id);
-
-          toast({
-            title: "Conversation deleted since only 1 participant left",
-            description: "Conversation deleted successfully",
-            variant: "default",
-          });
-
-          router.push("/chat");
-          return;
-        }
-
-        await updateConversation(conversation._id, {
-          createdBy: conversation.participants[1]._id,
-        });
-
-        toast({
-          title: "Admin changed",
-          description: "Admin changed successfully",
-          variant: "default",
-        });
-      }
-
-      await removeParticipant(conversation._id, participantId);
-      toast({
-        title: "Participant removed",
-        description: "Participant removed successfully",
-        variant: "default",
-      });
-
-      router.push("/chat");
-    } catch (error) {
-      toast({
-        title: "Oops!",
-        description: "Could not remove participant! Try again later.",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
     <div className="flex flex-col border h-screen sm:h-[80vh] w-full md:w-10/12 lg:w-8/12 mx-auto rounded-3xl">
       <div className="shadow-2xl rounded-3xl w-full p-4 flex items-center gap-4 mx-auto">
@@ -181,24 +112,6 @@ export default function MessageContainer({
                   </span>
                 </div>
               ))}
-            {isUserAdmin && (
-              <Button
-                className="text-sm mt-3 w-[150px] mx-auto"
-                variant={"destructive"}
-                onClick={handleDeleteConversation}
-              >
-                Delete {conversation.type === "group" ? "group" : "contact"}
-              </Button>
-            )}
-            {conversation.type === "group" && (
-              <Button
-                className="text-sm mt-3 w-[150px] mx-auto"
-                variant={"destructive"}
-                onClick={() => handleRemoveParticipant(userId!)}
-              >
-                Leave group
-              </Button>
-            )}
           </DialogContent>
         </Dialog>
       </div>

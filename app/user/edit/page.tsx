@@ -16,7 +16,6 @@ type OnBoardData = {
   favoriteArtists: string[];
 };
 
-// todo this gives error that user not found which shouln't be the case
 const EditProfile = async () => {
   const data: OnBoardData = await getOnboardData();
 

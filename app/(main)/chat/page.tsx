@@ -11,6 +11,7 @@ import {
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
+// todo fix deleting conversation
 const ChatHome = async () => {
   const { sessionClaims } = auth();
 
@@ -25,6 +26,7 @@ const ChatHome = async () => {
   // only the followers can be added to groups
   const canBeParticiants: IParticipant[] = await getUserFollowers(userId);
 
+  console.log(conversations.map((conversation) => conversation.participants));
   return (
     <div className="w-full max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-6">

@@ -7,9 +7,8 @@ const publicRoutes = createRouteMatcher([
   "/sign-up(.*)",
   "/api/webhooks/(.*)",
   "/api/uploadthing",
+  "/api/cron",
 ]);
-
-// const adminRoutes = createRouteMatcher(["/dashboard(.*)"]);
 
 export default clerkMiddleware((auth, req) => {
   if (!publicRoutes(req)) auth().protect();
