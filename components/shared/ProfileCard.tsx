@@ -200,7 +200,7 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
               <Button variant={"outline"} onClick={handleJamRequest}>
                 JAMM! request
               </Button>
-              <Link href={`/chat/${user._id}`}>
+              <Link href={`/chat/${user._id}?contact=true`}>
                 <Button variant="outline">
                   <MessageCircle />
                 </Button>

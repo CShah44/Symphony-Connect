@@ -27,11 +27,18 @@ import { useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { createPost } from "@/lib/actions/post.action";
 import { useRouter } from "next/navigation";
+import { DateTimePicker } from "../ui/datetime-picker";
+import { Input } from "../ui/input";
 
 const createPostSchema = z.object({
-  text: z.string().max(700, "Your post should be of less than 500 characters"),
+  text: z
+    .string()
+    .max(700, "Your post should be of less than 500 characters")
+    .optional(),
   images: z.any(),
   type: z.string(),
+  date: z.date().optional(),
+  eventTitle: z.string().optional(),
 });
 
 const CreatePostForm = () => {
@@ -51,10 +58,12 @@ const CreatePostForm = () => {
   async function onSubmit(values: z.infer<typeof createPostSchema>) {
     try {
       await createPost({
-        text: values.text,
+        text: values.text || "",
         type: values.type,
         imageUrls: imageUrls,
         id: user?.publicMetadata?.userId,
+        eventDate: values.date || null,
+        eventTitle: values.eventTitle || "",
       });
 
       form.reset();
@@ -126,7 +135,41 @@ const CreatePostForm = () => {
           )}
         />
         {/* if the user has selected an event show an extra date field */}
-        {form.watch("type") === "Event" && <div>todo</div>}
+        {form.watch("type") === "Event" && (
+          <>
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <div className="py-3">
+                      <DateTimePicker
+                        placeholder="Event Date"
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="eventTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>What's the name of your event?</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Event Title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )}
 
         <Button
           disabled={form.formState.isSubmitting}

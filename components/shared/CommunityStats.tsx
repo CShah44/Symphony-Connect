@@ -17,7 +17,7 @@ const CommunityStats = async () => {
   const totalUsers: number = await clerkClient().users.getCount();
 
   return (
-    <Card className="mx-auto w-11/12 col-span-1 rounded-2xl p-4 bg-transparent">
+    <Card className="mx-auto w-11/12 col-span-1 rounded-2xl p-4 bg-black/10">
       <CardHeader className="text-xl font-bold my-1 text-left">
         What's Trending?
         <CardDescription className="text-left font-normal">
@@ -31,7 +31,7 @@ const CommunityStats = async () => {
             {popularArtists.map((artist) => (
               <div
                 key={artist}
-                className="rounded-full bg-zinc-950 hover:bg-zinc-800 shadow-md p-2 flex flex-col items-center"
+                className="rounded-full bg-zinc-950 hover:bg-zinc-900 shadow-md p-2 flex flex-col items-center"
               >
                 <span className="text-sm">{artist}</span>
               </div>

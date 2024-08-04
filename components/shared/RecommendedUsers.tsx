@@ -11,11 +11,11 @@ import { getRecommendedUsers } from "@/lib/actions/utility.action";
 import { IUser } from "@/lib/database/models/user.model";
 
 const RecommendedUsers = async () => {
-  const users = await getRecommendedUsers();
+  const users = (await getRecommendedUsers()).slice(0, 5);
 
   return (
     <TooltipProvider>
-      <Card className="mx-auto w-11/12 col-span-1 rounded-2xl p-4 bg-transparent">
+      <Card className="mx-auto w-11/12 col-span-1 rounded-2xl p-4 bg-black/10">
         <CardHeader className="text-xl font-bold my-1">
           Who to follow
         </CardHeader>
@@ -23,7 +23,7 @@ const RecommendedUsers = async () => {
           {users.map((user: IUser) => (
             <div
               key={user._id}
-              className="rounded-xl bg-zinc-950 hover:bg-zinc-800 shadow-md p-4 w-full flex flex-col items-start"
+              className="rounded-xl bg-zinc-950 hover:bg-zinc-900 shadow-md p-4 w-full flex flex-col items-start"
             >
               <Link href={`/user/${user._id}`}>
                 <div className="flex gap-2 flex-row items-center w-full">

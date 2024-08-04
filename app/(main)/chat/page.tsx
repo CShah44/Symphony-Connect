@@ -26,7 +26,6 @@ const ChatHome = async () => {
   // only the followers can be added to groups
   const canBeParticiants: IParticipant[] = await getUserFollowers(userId);
 
-  console.log(conversations.map((conversation) => conversation.participants));
   return (
     <div className="w-full max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-6">
@@ -62,7 +61,7 @@ const ChatHome = async () => {
               className="block"
               key={conversation._id}
             >
-              <Card className="hover:bg-muted/20 transition-colors text-left pt-4">
+              <Card className="hover:bg-muted/20 transition-colors text-left pt-4 h-40">
                 <CardContent className="">
                   <div className="flex items-center justify-start gap-2 mb-2">
                     <Image
@@ -75,13 +74,14 @@ const ChatHome = async () => {
                     <h2 className="text-lg font-medium">{convName}</h2>
                   </div>
                   <p className="text-sm text-zinc-500 text-left">
-                    {conversation.participants
-                      .map((participant) =>
-                        participant._id === userId
-                          ? "You"
-                          : participant.firstName
-                      )
-                      .join(", ")}
+                    {conversation.type === "group" &&
+                      conversation.participants
+                        .map((participant) =>
+                          participant._id === userId
+                            ? "You"
+                            : participant.firstName
+                        )
+                        .join(", ")}
                   </p>
                 </CardContent>
                 <CardFooter className="">

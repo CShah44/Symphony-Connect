@@ -5,14 +5,15 @@ import { revalidatePath } from "next/cache";
 import { connect } from "../database";
 import Post, { IPost, IPostFeed } from "../database/models/post.model";
 import User, { IUser } from "../database/models/user.model";
-import { generateTextFromImage, recommendedPosts } from "./utility.action";
+import { recommendedPosts } from "./utility.action";
 
 export async function createPost(post: {
   text: string;
   type: String;
   imageUrls: String[];
-  // eventDate?: Date;
+  eventDate: Date | null;
   id: any;
+  eventTitle: string | "";
 }) {
   try {
     await connect();
@@ -21,8 +22,9 @@ export async function createPost(post: {
       text: post.text,
       type: post.type,
       imageUrls: post.imageUrls,
-      // eventDate: post.eventDate || null,
+      eventDate: post.eventDate,
       postedBy: post.id,
+      eventTitle: post.eventTitle,
     });
 
     revalidatePath("/feed");

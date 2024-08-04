@@ -189,7 +189,7 @@ const Post = ({
           <Image
             src={
               post.repost
-                ? post.repost.originalPostedBy.photo
+                ? post.repost.originalPostedBy?.photo || ""
                 : post.postedBy?.photo || ""
             }
             width={50}
@@ -200,13 +200,13 @@ const Post = ({
           <Link
             href={
               post.repost
-                ? `/user/${post.repost.originalPostedBy._id}`
+                ? `/user/${post.repost.originalPostedBy?._id}`
                 : `/user/${post.postedBy?._id}`
             }
           >
             <span className="ml-2 tracking-wide">
               {post.repost
-                ? post.repost.originalPostedBy.username
+                ? post.repost.originalPostedBy?.username
                 : post.postedBy?.username}
             </span>
           </Link>
@@ -220,8 +220,14 @@ const Post = ({
           {formatDateTime(post.createdAt!).dateTime}
         </span>
         {post.type != "Post" && (
+          // todo maybe add event title field?
           <CardDescription className="my-2">
             {post.type.toString() != "Post" ? post.type : ""}
+            {post.type == "Event" && post.eventDate && (
+              <div className="text-md">
+                <span>{formatDateTime(post.eventDate!).dateTime}</span>
+              </div>
+            )}
           </CardDescription>
         )}
       </CardHeader>

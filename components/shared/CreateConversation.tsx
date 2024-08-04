@@ -82,7 +82,7 @@ export default function CreateConversation({
     <Dialog>
       <DialogTrigger asChild>
         <Button className="text-md p-4" variant="outline">
-          Create Conversation <MessageSquareDiff className="ml-2" />
+          Create Group <MessageSquareDiff className="ml-2" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] font-agrandir">

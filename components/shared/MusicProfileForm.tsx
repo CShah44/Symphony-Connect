@@ -39,6 +39,7 @@ const EditMusicProfileSchema = z.object({
 
 const MusicProfileForm = ({
   data,
+  currentUser,
 }: {
   data: {
     genres: string[];
@@ -46,29 +47,10 @@ const MusicProfileForm = ({
     skills: string[];
     favoriteArtists: string[];
   };
+  currentUser: IUser | null;
 }) => {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        const loggedInUser = await getCurrentUser();
-
-        if (!loggedInUser) return;
-
-        if (loggedInUser !== null && loggedInUser !== undefined) {
-          setCurrentUser(loggedInUser);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log("Could not get the user, maybe onboarding is not complete");
-      }
-    }, 1500);
-
-    return () => clearInterval(interval);
-  }, [currentUser]);
+  // const [loading, setLoading] = useState(true);
 
   const form = useForm<z.infer<typeof EditMusicProfileSchema>>({
     resolver: zodResolver(EditMusicProfileSchema),
@@ -103,7 +85,7 @@ const MusicProfileForm = ({
     }
   }
 
-  if (loading) return <div>Creating Your account... please wait</div>;
+  // if (loading) return <div>Loading Your account... please wait</div>;
 
   return (
     <Form {...form}>
