@@ -243,3 +243,61 @@ export const sendJamRequest = async (userId: string, otherUserId: string) => {
     throw new Error("Could not send the JAM request in database");
   }
 };
+
+export const deleteGroup = async (conversationId: string) => {
+  try {
+    await connect();
+
+    await Conversation.findByIdAndDelete(conversationId);
+    await Message.deleteMany({ conversation: conversationId });
+
+    revalidatePath("/chat");
+    return JSON.parse(JSON.stringify({ message: "Group deleted" }));
+  } catch (error) {
+    console.log(error);
+    throw new Error("Could not delete the group in database");
+  }
+};
+
+export const leaveConversation = async (
+  conversationId: string,
+  participantId: string,
+  type: string
+) => {
+  try {
+    await connect();
+
+    const conv = await Conversation.findById(conversationId).select(
+      "createdBy participants"
+    );
+
+    if (!conv) {
+      throw new Error("Conversation not found");
+    }
+
+    if (type === "group") {
+      await Conversation.findByIdAndUpdate(conversationId, {
+        $pull: { participants: participantId },
+      });
+
+      if (conv.createdBy === participantId) {
+        // change the admin after removing the last adming
+        await Conversation.findByIdAndUpdate(conversationId, {
+          $set: { createdBy: conv.participants[1] },
+        });
+      }
+
+      if (conv.participants.length === 2) {
+        // delete the conversation if there is only 1 participant left after removing
+        await Conversation.findByIdAndDelete(conversationId);
+      }
+    } else if (type === "contact") {
+      await Conversation.findByIdAndDelete(conversationId);
+    }
+
+    revalidatePath("/chat");
+    return JSON.parse(JSON.stringify({ message: "Conversation left" }));
+  } catch (error) {
+    throw new Error("Could not leave the conversation in database");
+  }
+};

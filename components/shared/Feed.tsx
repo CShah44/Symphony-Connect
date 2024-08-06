@@ -7,6 +7,7 @@ import { IPostFeed } from "@/lib/database/models/post.model";
 import { getPosts, getUserPosts } from "@/lib/actions/post.action";
 import { Skeleton } from "../ui/skeleton";
 
+// todo use state managment for posts or maybe use from server component
 const FeedContainer = ({ id }: { id?: string }) => {
   const [posts, setPosts] = useState<IPostFeed[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

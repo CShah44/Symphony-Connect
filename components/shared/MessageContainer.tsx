@@ -7,19 +7,23 @@ import { IMessage } from "@/lib/database/models/message.model";
 import { useEffect, useRef, useState } from "react";
 import { pusherClient } from "@/lib/pusher/pusherClient";
 import { Input } from "../ui/input";
-import { sendMessage } from "@/lib/actions/chat.action";
+import {
+  deleteGroup,
+  leaveConversation,
+  sendMessage,
+} from "@/lib/actions/chat.action";
 import { toast } from "../ui/use-toast";
 import { IConversation } from "@/lib/database/models/conversation.model";
 import { formatDateTime } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
 import { useRouter } from "next/navigation";
 
-// todo fix the deleting system
 export default function MessageContainer({
   messages: preLoadedMessages,
   userId,
@@ -77,6 +81,46 @@ export default function MessageContainer({
 
   const isUserAdmin = conversation.createdBy._id === userId;
 
+  const handleDeleteGroup = async () => {
+    try {
+      await deleteGroup(conversationId);
+
+      router.replace("/chat");
+      toast({
+        title: "Group deleted!",
+        description: "Group has been deleted successfully.",
+        variant: "destructive",
+        duration: 2000,
+      });
+    } catch (error) {
+      toast({
+        title: "Oops!",
+        description: "Could not delete group! Try again later.",
+        variant: "destructive",
+        duration: 2000,
+      });
+    }
+  };
+
+  const handleLeaveConversation = async () => {
+    try {
+      await leaveConversation(conversationId, userId!, conversation.type);
+
+      router.replace("/chat");
+      toast({
+        title: "Conversation left!",
+        description: `You left the conversation: ${conversation.groupName}`,
+        variant: "destructive",
+      });
+    } catch (error) {
+      toast({
+        title: "Oops!",
+        description: "Could not leave conversation! Try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col border h-screen sm:h-[80vh] w-full md:w-10/12 lg:w-8/12 mx-auto rounded-3xl">
       <div className="shadow-2xl rounded-3xl w-full p-4 flex items-center gap-4 mx-auto">
@@ -112,6 +156,16 @@ export default function MessageContainer({
                   </span>
                 </div>
               ))}
+            <DialogFooter>
+              {conversation.type === "group" && isUserAdmin && (
+                <Button variant={"destructive"} onClick={handleDeleteGroup}>
+                  Delete Group
+                </Button>
+              )}
+              <Button onClick={handleLeaveConversation} variant={"ghost"}>
+                Leave {conversation.type === "group" ? "Group" : "Contact"}
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

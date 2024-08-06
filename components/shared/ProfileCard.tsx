@@ -1,6 +1,6 @@
 "use client";
 
-import { followUnfollow, getUserById } from "@/lib/actions/user.action";
+import { followUnfollow } from "@/lib/actions/user.action";
 import { IUser } from "@/lib/database/models/user.model";
 import { useEffect, useState } from "react";
 import {
@@ -25,7 +25,6 @@ import { SignOutButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import {
-  CircleUserRound,
   MessageCircle,
   SlidersHorizontal,
   UserPlus,

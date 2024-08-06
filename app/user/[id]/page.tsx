@@ -13,8 +13,9 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth } from "@clerk/nextjs/server";
+import { CirclePlus } from "lucide-react";
 
 const Profile = async ({ params }: { params: { id: string } }) => {
   const user: IUser | null = await getUserById(params.id);

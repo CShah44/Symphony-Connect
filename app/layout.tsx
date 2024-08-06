@@ -27,7 +27,6 @@ export const metadata: Metadata = {
   },
 };
 
-// todo use signedin signedout component
 export default function RootLayout({
   children,
 }: Readonly<{

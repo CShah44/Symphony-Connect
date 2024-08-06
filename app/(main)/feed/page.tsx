@@ -3,12 +3,15 @@ import FeedContainer from "@/components/shared/Feed";
 import RecommendedUsers from "@/components/shared/RecommendedUsers";
 import Stories from "@/components/shared/Stories";
 import { Button } from "@/components/ui/button";
+// import { getPosts } from "@/lib/actions/post.action";
 import { getCurrentUser } from "@/lib/actions/user.action";
 import { CirclePlus, MessageSquare, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
 const Feed = async () => {
   const currentUser = await getCurrentUser();
+  // const posts = await getPosts();
+
   return (
     <>
       <div className="lg:hidden block">

@@ -39,11 +39,6 @@ const Chat = async (params: {
         redirect(`/chat/${newConversation._id}`);
       }
     } else {
-      toast({
-        title: "Oops!",
-        description: "Could not find the conversation",
-        variant: "destructive",
-      });
       redirect(`/chat`);
     }
   }

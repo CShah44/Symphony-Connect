@@ -11,7 +11,6 @@ import {
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-// todo fix deleting conversation
 const ChatHome = async () => {
   const { sessionClaims } = auth();
 

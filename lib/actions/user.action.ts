@@ -8,6 +8,7 @@ import Conversation, {
   IConversation,
   IParticipant,
 } from "../database/models/conversation.model";
+import Post from "../database/models/post.model";
 
 export async function getUserById(userId: any) {
   try {
@@ -162,6 +163,9 @@ export async function deleteUser(clerkId: string) {
 
     // Delete user
     const deletedUser = await User.findByIdAndDelete(userToDelete._id);
+
+    // delete all the posts of the user
+    await Post.deleteMany({ postedBy: userId });
 
     // find all conversations user is a part of and delete his id from participants
     const conversations = await Conversation.find({ participants: userId });
