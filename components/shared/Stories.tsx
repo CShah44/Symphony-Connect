@@ -111,7 +111,7 @@ export default function Stories({ currUserId }: { currUserId: string }) {
               </Avatar>
             </button>
           </DialogTrigger>
-          <DialogContent className="font-agrandir">
+          <DialogContent className="font-agrandir bg-black/10 backdrop-blur-2xl">
             <DialogHeader>
               <DialogTitle className="tracking-wide">
                 {story.postedBy.firstName}'s Story

@@ -36,8 +36,10 @@ const Profile = async ({ params }: { params: { id: string } }) => {
       {user.role === "admin" &&
         sessionClaims?.public_metadata?.userId === user?._id && (
           <Card className="w-11/12 sm:w-[650px] mx-auto">
-            <CardHeader className="text-lg">You're an admin</CardHeader>
-            <CardContent className="flex gap-2 items-center">
+            <CardHeader className="text-md sm:text-lg">
+              You're an admin
+            </CardHeader>
+            <CardContent className="flex gap-2 items-center text-xs sm:text-md">
               You can manage users through the dashboard.
               <Link href={"/dashboard"}>
                 <Button variant={"outline"}>Go to Dashboard</Button>

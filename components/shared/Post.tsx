@@ -32,7 +32,6 @@ import { toast } from "../ui/use-toast";
 import CommentsContainer from "./CommentsContainer";
 import { formatDateTime } from "@/lib/utils";
 
-// make this a magic ccard todo
 const Post = ({
   post,
   setPosts,
@@ -219,7 +218,7 @@ const Post = ({
           {formatDateTime(post.createdAt!).dateTime}
         </span>
         {post.type != "Post" && (
-          // todo maybe add event title field?
+          // todo  add event title field?
           <CardDescription className="my-2">
             {post.type.toString() != "Post" ? post.type : ""}
             {post.type == "Event" && post.eventDate && (
@@ -257,15 +256,29 @@ const Post = ({
         )}
       </CardContent>
       <CardFooter className="flex flex-col gap-4 items-start">
-        <div className="flex gap-5 justify-center items-center text-md">
-          <Button className="rounded-full text-xl" onClick={handleLikeUnlike}>
-            {liked ? <HeartOff /> : <Heart />}
+        <div className="flex w-full justify-around items-center text-md">
+          <Button
+            className="rounded-full"
+            variant={"outline"}
+            onClick={handleLikeUnlike}
+          >
+            {liked ? (
+              <HeartOff width={16} height={16} />
+            ) : (
+              <Heart width={16} height={16} />
+            )}
           </Button>
-          <span>{post.likes.length} Likes</span>
+          <span className="text-xs sm:text-xl">{post.likes.length} Likes</span>
           <CommentsContainer post={post} handleOnSubmit={handleAddComment} />
-          <span>{post.comments.length} Comments</span>
-          <Button className="rounded-full text-xl" onClick={handleRepost}>
-            <Repeat2 size={28} />
+          <span className="text-xs sm:text-xl">
+            {post.comments.length} Comments
+          </span>
+          <Button
+            className="rounded-full "
+            variant={"outline"}
+            onClick={handleRepost}
+          >
+            <Repeat2 size={16} />
           </Button>
         </div>
       </CardFooter>

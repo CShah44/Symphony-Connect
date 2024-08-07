@@ -141,7 +141,7 @@ const CreatePostForm = () => {
               control={form.control}
               name="date"
               render={({ field }) => (
-                <FormItem className="w-full">
+                <FormItem className="w-full mt-3">
                   <FormControl>
                     <div className="py-3">
                       <DateTimePicker

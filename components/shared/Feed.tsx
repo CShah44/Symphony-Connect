@@ -14,14 +14,14 @@ const FeedContainer = ({ initialPosts }: { initialPosts: IPostFeed[] }) => {
     <div className="my-4 p-4 w-full flex flex-col justify-center">
       {posts.length > 0 && (
         <Tabs defaultValue="All">
-          <TabsList className="w-full bg-transparent mb-3  flex gap-4">
+          <TabsList className="w-full bg-transparent mb-3 flex gap-4">
             {tabs.map((t, i) => (
-              <TabsTrigger key={`${i}=${t}`} value={t}>
+              <TabsTrigger key={t.length} value={t}>
                 {t}
               </TabsTrigger>
             ))}
           </TabsList>
-          {tabs.map((t) => {
+          {tabs.map((t, i) => {
             let filteredPosts = posts;
 
             if (t !== "All") filteredPosts = posts.filter((p) => p.type === t);
@@ -31,7 +31,7 @@ const FeedContainer = ({ initialPosts }: { initialPosts: IPostFeed[] }) => {
                 {filteredPosts.length > 0 && (
                   <TabsContent
                     className="gap-5 flex flex-col"
-                    key={t}
+                    key={t.length}
                     value={t}
                   >
                     {filteredPosts.map((post) => (

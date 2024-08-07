@@ -26,7 +26,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
   text: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Comment must have at least 2 characters.",
   }),
 });
 
@@ -52,13 +52,13 @@ const CommentsContainer = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="rounded-full text-xl">
-          <MessageCirclePlus />
+        <Button className="rounded-full" variant={"outline"}>
+          <MessageCirclePlus size={16} />
         </Button>
       </DialogTrigger>
-      <DialogContent className="font-agrandir w-full">
+      <DialogContent className="font-agrandir w-full bg-zinc-800/10 backdrop-blur-2xl">
         <DialogHeader>
-          <DialogTitle>Comments</DialogTitle>
+          <DialogTitle className="tracking-wide">Comments</DialogTitle>
           <DialogDescription>
             Here's what people have said about this post
           </DialogDescription>

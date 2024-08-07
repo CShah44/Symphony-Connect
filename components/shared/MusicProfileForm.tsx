@@ -85,8 +85,6 @@ const MusicProfileForm = ({
     }
   }
 
-  // if (loading) return <div>Loading Your account... please wait</div>;
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -94,14 +92,14 @@ const MusicProfileForm = ({
           control={form.control}
           name="favoriteArtists"
           render={() => (
-            <FormItem className="w-[650px] ">
+            <FormItem>
               <div className="mb-4">
                 <FormLabel className="text-base">Artists</FormLabel>
                 <FormDescription>
                   Select all your favorite artists! (max 10)
                 </FormDescription>
               </div>
-              <div className="flex flex-wrap gap-5 text-md">
+              <div className="flex flex-wrap gap-3 md:gap-5 text-md">
                 {data?.favoriteArtists.map((item) => (
                   <FormField
                     key={item}
@@ -142,14 +140,14 @@ const MusicProfileForm = ({
           control={form.control}
           name="genres"
           render={() => (
-            <FormItem className="w-[650px] ">
+            <FormItem>
               <div className="mb-4">
                 <FormLabel className="text-base">Genres</FormLabel>
                 <FormDescription>
                   What genres do you like? (max 10)
                 </FormDescription>
               </div>
-              <div className="flex flex-wrap gap-5 text-md">
+              <div className="flex flex-wrap gap-3 md:gap-5 text-md">
                 {data?.genres.map((item) => (
                   <FormField
                     key={item}
@@ -207,14 +205,14 @@ const MusicProfileForm = ({
           control={form.control}
           name="instruments"
           render={() => (
-            <FormItem className="w-[650px] ">
+            <FormItem>
               <div className="mb-4">
                 <FormLabel className="text-base">Instruments</FormLabel>
                 <FormDescription>
                   What instruments do you play? (max 10)
                 </FormDescription>
               </div>
-              <div className="flex flex-wrap gap-5 text-md">
+              <div className="flex flex-wrap gap-3 md:gap-5 text-md">
                 {data?.instruments.map((item) => (
                   <FormField
                     key={item}
@@ -255,14 +253,14 @@ const MusicProfileForm = ({
           control={form.control}
           name="skills"
           render={() => (
-            <FormItem className="w-[650px] ">
+            <FormItem>
               <div className="mb-4">
                 <FormLabel className="text-base">Skills</FormLabel>
                 <FormDescription>
                   What skills do you have? (max 10)
                 </FormDescription>
               </div>
-              <div className="flex flex-wrap gap-5 text-md">
+              <div className="flex flex-wrap gap-3 md:gap-5 text-md">
                 {data?.skills.map((item) => (
                   <FormField
                     key={item}

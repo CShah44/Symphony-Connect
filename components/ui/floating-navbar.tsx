@@ -3,29 +3,25 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  SignUpButton,
-  useClerk,
-  useUser,
-} from "@clerk/nextjs";
+import { SignedIn, SignOutButton, useUser } from "@clerk/nextjs";
 import { Menu } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Avatar, AvatarImage } from "./avatar";
+import { usePathname } from "next/navigation";
 
-// todo use sheet for mobile nav
+// todo maybe hide the floating buttons for mobile
 export const FloatingNav = ({ className }: { className?: string }) => {
   const { user } = useUser();
+  const pathname = usePathname();
+
+  if (pathname.includes("sign-in") || pathname.includes("sign-up")) return null;
 
   const navItems = [
     {
@@ -64,9 +60,6 @@ export const FloatingNav = ({ className }: { className?: string }) => {
         <Avatar className="mr-auto sm:col-span-1">
           <AvatarImage className="hidden sm:block" src="/favicon.png" />
         </Avatar>
-        <div className="sm:hidden font-melodrama mr-auto w-full text-left text-md font-medium">
-          Symphony Connect
-        </div>
         <div className="hidden sm:flex sm:flex-row sm:gap-8 col-span-4 lg:col-span-3">
           {navItems.map((navItem: any, idx: number) => (
             <Link
@@ -89,20 +82,57 @@ export const FloatingNav = ({ className }: { className?: string }) => {
           </SignedIn>
         </div>
         <div className="sm:hidden pr-4 ml-auto my-auto">
-          <DropdownMenu>
-            <DropdownMenuTrigger>
+          <Sheet>
+            <SheetTrigger>
               <Menu />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="font-agrandir z-[1001]">
-              <DropdownMenuLabel>Go to</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {navItems.map((navItem: any, idx: number) => (
-                <DropdownMenuItem key={`link=${idx}`}>
-                  <Link href={navItem.link}>{navItem.name}</Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </SheetTrigger>
+            <SheetContent side={"bottom"} className="font-agrandir w-screen">
+              <SheetHeader>
+                <SheetTitle className="font-melodrama text-3xl ">
+                  SYMPHONY CONNECT
+                </SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col gap-5 mb-10 mt-16">
+                {navItems.map((navItem: any, idx: number) => (
+                  <Link
+                    key={`link=${idx}`}
+                    href={navItem.link}
+                    className={cn(
+                      "relative text-neutral-50 items-center flex space-x-2  hover:text-neutral-300 "
+                    )}
+                  >
+                    <span className="block text-md sm:text-lg">
+                      {navItem.name}
+                    </span>
+                  </Link>
+                ))}
+                <Link
+                  href={"/create"}
+                  className={cn(
+                    "relative text-neutral-50 items-center flex space-x-2  hover:text-neutral-300 "
+                  )}
+                >
+                  <span className="block text-md sm:text-lg">
+                    Create a post
+                  </span>
+                </Link>
+                <Link
+                  href={"/chat"}
+                  className={cn(
+                    "relative text-neutral-50 items-center flex space-x-2  hover:text-neutral-300 "
+                  )}
+                >
+                  <span className="block text-md sm:text-lg">Chat</span>
+                </Link>
+              </div>
+              <SignedIn>
+                <div className="border text-sm font-medium relative border-white/[0.2] text-neutral-100 px-6 py-4 rounded-full w-[200px]">
+                  <SignOutButton />
+                  <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent h-px" />
+                </div>
+              </SignedIn>
+            </SheetContent>
+          </Sheet>
         </div>
       </motion.nav>
     </AnimatePresence>

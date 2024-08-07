@@ -1,4 +1,5 @@
 import { UserProfile } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 const Settings = () => {
   return (
@@ -7,7 +8,7 @@ const Settings = () => {
         Any changes you make will be saved automatically and reflected on
         reloading the website.
       </h1>
-      <UserProfile />
+      <UserProfile appearance={{ baseTheme: dark }} />
     </div>
   );
 };

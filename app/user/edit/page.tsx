@@ -31,9 +31,9 @@ const EditProfile = async (params: { searchParams: { onboard: boolean } }) => {
 
   return (
     <Suspense fallback={<Skeleton className="w-[650px] h-[500px]" />}>
-      <div className="flex flex-col justify-start gap-3 ">
-        <div className="flex justify-between w-[650px] mb-5">
-          <h1 className="text-3xl">Edit Music Profile</h1>
+      <div className="flex flex-col justify-start gap-3 w-[650px] h-[500px] p-4 mb-2">
+        <div className="flex justify-between mb-5">
+          <h1 className="text-2xl md:text-3xl">Edit Music Profile</h1>
           <Link href="/settings">
             <Button variant={"link"}>Go to account settings</Button>
           </Link>
