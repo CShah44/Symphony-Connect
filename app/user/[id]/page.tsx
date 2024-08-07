@@ -1,10 +1,5 @@
-// "use client";
-
 import ProfileCard from "@/components/shared/ProfileCard";
-// import { useParams } from "next/navigation";
 import FeedContainer from "@/components/shared/Feed";
-// import { useEffect, useState } from "react";
-// import { useRouter } from "next/navigation";
 import { getUserById } from "@/lib/actions/user.action";
 import { toast } from "@/components/ui/use-toast";
 import { IUser } from "@/lib/database/models/user.model";
@@ -13,13 +8,14 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { auth } from "@clerk/nextjs/server";
-import { CirclePlus } from "lucide-react";
+import { getUserPosts } from "@/lib/actions/post.action";
 
 const Profile = async ({ params }: { params: { id: string } }) => {
   const user: IUser | null = await getUserById(params.id);
   const { sessionClaims } = auth();
+  const posts = await getUserPosts(params.id);
 
   if (!user) {
     toast({
@@ -49,7 +45,7 @@ const Profile = async ({ params }: { params: { id: string } }) => {
             </CardContent>
           </Card>
         )}
-      <FeedContainer id={params.id} />
+      <FeedContainer initialPosts={posts} />
     </div>
   );
 };

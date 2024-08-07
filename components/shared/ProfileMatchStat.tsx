@@ -43,7 +43,7 @@ const ProfileMatchStat = ({ data }: { data?: number }) => {
             </svg>
           </div>
           <span className="sm:hidden block text-xs text-zinc-400">
-            Profile Match
+            Profile Match {data}%
           </span>
         </TooltipTrigger>
       </Tooltip>

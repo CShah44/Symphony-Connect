@@ -85,7 +85,7 @@ export async function deletePostById(postId: string) {
     await connect();
     await Post.findByIdAndDelete(postId);
 
-    revalidatePath("/feed");
+    // revalidatePath("/feed");
     return JSON.parse(JSON.stringify({ message: "Post deleted successfully" }));
   } catch (error) {
     throw new Error("Could not delete the post!");
@@ -208,7 +208,7 @@ export async function repost(postId: string, repostedBy_UserId: any) {
       select: "photo username",
     });
 
-    revalidatePath("/feed");
+    // revalidatePath("/feed");
     return JSON.parse(JSON.stringify(newPost));
   } catch (error) {
     throw new Error("Could not repost the post!");

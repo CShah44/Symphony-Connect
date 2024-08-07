@@ -1,51 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Post from "./Post";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IPostFeed } from "@/lib/database/models/post.model";
-import { getPosts, getUserPosts } from "@/lib/actions/post.action";
-import { Skeleton } from "../ui/skeleton";
 
-// todo use state managment for posts or maybe use from server component
-const FeedContainer = ({ id }: { id?: string }) => {
-  const [posts, setPosts] = useState<IPostFeed[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    async function getAllPosts() {
-      const res = await getPosts();
-      setPosts([...res]);
-      setLoading(false);
-    }
-
-    async function handleGetUserPosts() {
-      const data = await getUserPosts(id);
-      setPosts(data);
-      setLoading(false);
-    }
-
-    id ? handleGetUserPosts() : getAllPosts();
-  }, []);
+const FeedContainer = ({ initialPosts }: { initialPosts: IPostFeed[] }) => {
+  const [posts, setPosts] = useState<IPostFeed[]>(initialPosts);
 
   const tabs = ["All", "Post", "Oppurtunity", "Event"];
 
-  if (loading)
-    return (
-      <div className="w-full flex flex-col justify-center mx-auto">
-        <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
-        <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
-        <Skeleton className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto h-[200px]" />
-      </div>
-    );
-
   return (
     <div className="my-4 p-4 w-full flex flex-col justify-center">
-      {posts.length > 0 && !loading && (
+      {posts.length > 0 && (
         <Tabs defaultValue="All">
           <TabsList className="w-full bg-transparent mb-3  flex gap-4">
-            {tabs.map((t) => (
-              <TabsTrigger key={t} value={t}>
+            {tabs.map((t, i) => (
+              <TabsTrigger key={i} value={t}>
                 {t}
               </TabsTrigger>
             ))}
@@ -78,7 +49,7 @@ const FeedContainer = ({ id }: { id?: string }) => {
           })}
         </Tabs>
       )}
-      {posts.length === 0 && !loading && (
+      {posts.length === 0 && (
         <div className="my-4 p-4 md:w-[650px] w-full flex flex-col justify-center mx-auto">
           <div className="text-center">No posts found</div>
         </div>

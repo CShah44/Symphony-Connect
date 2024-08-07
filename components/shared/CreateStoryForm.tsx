@@ -61,8 +61,6 @@ const CreateStoryForm = ({
       });
 
       setStories((prevStories) => [...prevStories, newStory]);
-
-      router.push("/feed");
     } catch (error) {
       console.log(error);
       return toast({
