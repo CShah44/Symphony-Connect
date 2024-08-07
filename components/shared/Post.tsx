@@ -7,7 +7,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
 import {
   Card,
   CardContent,
@@ -33,10 +32,10 @@ import { toast } from "../ui/use-toast";
 import CommentsContainer from "./CommentsContainer";
 import { formatDateTime } from "@/lib/utils";
 
+// make this a magic ccard todo
 const Post = ({
   post,
   setPosts,
-  posts,
 }: {
   post: IPostFeed;
   setPosts: Dispatch<SetStateAction<any>>;
@@ -257,12 +256,6 @@ const Post = ({
           </Carousel>
         )}
       </CardContent>
-      {/* include space for event date if the post is an event */}
-      {/* {post.type === "Event" && post.eventDate && (
-        <div className="flex gap-5 justify-center items-center text-md">
-          <span>{formatDateTime(post.eventDate).dateTime}</span>
-        </div>
-      )} */}
       <CardFooter className="flex flex-col gap-4 items-start">
         <div className="flex gap-5 justify-center items-center text-md">
           <Button className="rounded-full text-xl" onClick={handleLikeUnlike}>

@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage } from "./avatar";
 
+// todo use sheet for mobile nav
 export const FloatingNav = ({ className }: { className?: string }) => {
   const { user } = useUser();
 
@@ -63,7 +64,7 @@ export const FloatingNav = ({ className }: { className?: string }) => {
         <Avatar className="mr-auto sm:col-span-1">
           <AvatarImage className="hidden sm:block" src="/favicon.png" />
         </Avatar>
-        <div className="sm:hidden font-melodrama mr-auto w-full text-left text-xl font-medium">
+        <div className="sm:hidden font-melodrama mr-auto w-full text-left text-md font-medium">
           Symphony Connect
         </div>
         <div className="hidden sm:flex sm:flex-row sm:gap-8 col-span-4 lg:col-span-3">

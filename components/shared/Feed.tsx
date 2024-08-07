@@ -16,7 +16,7 @@ const FeedContainer = ({ initialPosts }: { initialPosts: IPostFeed[] }) => {
         <Tabs defaultValue="All">
           <TabsList className="w-full bg-transparent mb-3  flex gap-4">
             {tabs.map((t, i) => (
-              <TabsTrigger key={i} value={t}>
+              <TabsTrigger key={`${i}=${t}`} value={t}>
                 {t}
               </TabsTrigger>
             ))}

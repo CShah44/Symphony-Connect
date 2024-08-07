@@ -80,7 +80,7 @@ export default function Stories({ currUserId }: { currUserId: string }) {
       style={{
         scrollbarWidth: "none",
       }}
-      className="flex items-center mt-4 gap-4 p-4 bg-black rounded-xl w-11/12 mx-auto overflow-x-scroll"
+      className="flex items-center mt-4 gap-4 p-4 bg-black rounded-2xl w-11/12 mx-auto overflow-x-scroll"
     >
       {showPostIcon && (
         <Dialog>

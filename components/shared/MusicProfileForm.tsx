@@ -299,7 +299,9 @@ const MusicProfileForm = ({
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button disabled={form.formState.isSubmitting} type="submit">
+          {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+        </Button>
         <p className="text-secondary-foreground text-sm">
           You can change this later
         </p>

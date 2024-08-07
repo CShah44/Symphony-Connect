@@ -1,6 +1,7 @@
 import { connect } from "@/lib/database";
 import { SignUp } from "@clerk/nextjs";
 
+// todo change the appearance of sign up and sign in pages
 export default async function Page() {
   await connect();
 
