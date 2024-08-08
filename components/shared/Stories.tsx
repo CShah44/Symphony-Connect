@@ -27,6 +27,7 @@ import {
   CarouselPrevious,
 } from "../ui/carousel";
 import { Card, CardContent } from "../ui/card";
+import { pusherClient } from "@/lib/pusher/pusherClient";
 
 export default function Stories({ currUserId }: { currUserId: string }) {
   const [showPostIcon, setShowPostIcon] = useState(true);
@@ -73,6 +74,17 @@ export default function Stories({ currUserId }: { currUserId: string }) {
     }
   };
 
+  useEffect(() => {
+    pusherClient.subscribe("stories");
+    pusherClient.bind("new-story", (data: IStory) => {
+      setStories((prevStories) => [...prevStories, data]);
+    });
+
+    return () => {
+      pusherClient.unsubscribe("stories");
+    };
+  });
+
   if (loading) return <Skeleton className="w-11/12 mx-auto mt-4" />;
 
   return (
@@ -98,7 +110,7 @@ export default function Stories({ currUserId }: { currUserId: string }) {
                 Share your moment with your friends.
               </DialogDescription>
             </DialogHeader>
-            <CreateStoryForm setStories={setStories} />
+            <CreateStoryForm />
           </DialogContent>
         </Dialog>
       )}

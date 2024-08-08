@@ -5,7 +5,6 @@ import { toast } from "@/components/ui/use-toast";
 import { IUser } from "@/lib/database/models/user.model";
 import { Skeleton } from "@/components/ui/skeleton";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -28,11 +27,12 @@ const Profile = async ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="flex flex-col justify-center items-center gap-3">
-      <Suspense
-        fallback={<Skeleton className="w-11/12 sm:w-[650px] h-[300px]" />}
-      >
+      {user ? (
         <ProfileCard userProps={user} />
-      </Suspense>
+      ) : (
+        <Skeleton className="w-11/12 sm:w-[650px] h-[300px]" />
+      )}
+
       {user.role === "admin" &&
         sessionClaims?.public_metadata?.userId === user?._id && (
           <Card className="w-11/12 sm:w-[650px] mx-auto">

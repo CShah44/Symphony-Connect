@@ -12,6 +12,7 @@ const Feed = async () => {
   const currentUser = await getCurrentUser();
   const posts = await getPosts();
 
+  // todo hide floating button on mobile
   return (
     <>
       <div className="lg:hidden block">
@@ -34,16 +35,18 @@ const Feed = async () => {
           <RecommendedUsers />
         </div>
       </div>
-      <Link href="/create">
-        <Button className="rounded-full fixed w-16 h-16 drop-shadow-lg shadow-yellow-100 right-4 bottom-4 text-slate-800 bg-neutral-200 hover:bg-neutral-400">
-          <CirclePlus size={28} strokeWidth={3} />
-        </Button>
-      </Link>
-      <Link href="/chat">
-        <Button className="rounded-full fixed w-16 h-16 drop-shadow-lg shadow-yellow-100 right-4 bottom-24 text-slate-800 bg-neutral-200 hover:bg-neutral-400">
-          <MessageSquare size={28} strokeWidth={3} />
-        </Button>
-      </Link>
+      <div>
+        <Link href="/create">
+          <Button className="rounded-full fixed w-16 h-16 drop-shadow-lg shadow-yellow-100 right-4 bottom-4 text-slate-800 bg-neutral-200 hover:bg-neutral-400">
+            <CirclePlus size={28} strokeWidth={3} />
+          </Button>
+        </Link>
+        <Link href="/chat">
+          <Button className="rounded-full fixed w-16 h-16 drop-shadow-lg shadow-yellow-100 right-4 bottom-24 text-slate-800 bg-neutral-200 hover:bg-neutral-400">
+            <MessageSquare size={28} strokeWidth={3} />
+          </Button>
+        </Link>
+      </div>
     </>
   );
 };

@@ -8,7 +8,7 @@ import { IPostFeed } from "@/lib/database/models/post.model";
 const FeedContainer = ({ initialPosts }: { initialPosts: IPostFeed[] }) => {
   const [posts, setPosts] = useState<IPostFeed[]>(initialPosts);
 
-  const tabs = ["All", "Post", "Oppurtunity", "Event"];
+  const tabs = ["All", "Post", "Opportunity", "Event"];
 
   return (
     <div className="my-4 p-4 w-full flex flex-col justify-center">

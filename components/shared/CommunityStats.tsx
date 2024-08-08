@@ -10,6 +10,7 @@ import {
   CardHeader,
 } from "../ui/card";
 import { clerkClient } from "@clerk/nextjs/server";
+import { MicVocal, Music, TrendingUp } from "lucide-react";
 
 const CommunityStats = async () => {
   const popularArtists: string[] = await getMostPopularArtists();
@@ -19,14 +20,19 @@ const CommunityStats = async () => {
   return (
     <Card className="mx-auto w-11/12 col-span-1 rounded-2xl p-4 bg-black/10">
       <CardHeader className="text-xl font-bold my-1 text-left">
-        What's Trending?
+        <div className="flex flex-row justify-start items-center gap-2">
+          What's Trending <TrendingUp size={20} />
+        </div>
         <CardDescription className="text-left font-normal">
           Take a look at what's trending in the community
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-3">
         <div className="flex flex-col items-start">
-          <span className="text-lg">Popular Artists</span>
+          <div className="text-lg flex flex-row justify-start items-center gap-2">
+            <span>Popular Artists </span>
+            <MicVocal size={20} />
+          </div>
           <div className="flex flex-wrap gap-2 justify-start items-center py-2">
             {popularArtists.map((artist) => (
               <div
@@ -40,7 +46,10 @@ const CommunityStats = async () => {
         </div>
 
         <div className="flex flex-col items-start">
-          <span className="text-lg">Popular Genres</span>
+          <div className="text-lg flex flex-row justify-start items-center gap-2">
+            <span>Popular Genres</span>
+            <Music size={20} />
+          </div>
           <div className="flex flex-wrap gap-2 justify-start items-center py-2">
             {popularGenres.map((genre) => (
               <div

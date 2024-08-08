@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/tooltip";
 import { getRecommendedUsers } from "@/lib/actions/utility.action";
 import { IUser } from "@/lib/database/models/user.model";
+import { UserPlus } from "lucide-react";
 
 const RecommendedUsers = async () => {
   const users = (await getRecommendedUsers()).slice(0, 5);
@@ -16,8 +17,8 @@ const RecommendedUsers = async () => {
   return (
     <TooltipProvider>
       <Card className="mx-auto w-11/12 col-span-1 rounded-2xl p-4 bg-black/10">
-        <CardHeader className="text-xl font-bold my-1">
-          Who to follow
+        <CardHeader className="text-xl font-bold my-1 flex flex-row justify-center items-center gap-2">
+          Who to follow <UserPlus size={24} />
         </CardHeader>
         <CardContent className="grid gap-3 p-1">
           {users.map((user: IUser) => (

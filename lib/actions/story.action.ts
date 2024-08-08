@@ -3,6 +3,8 @@
 import { IStory, Story } from "../database/models/story.model";
 import User from "../database/models/user.model";
 import { connect } from "../database";
+import { revalidatePath } from "next/cache";
+import { pusherServer } from "../pusher/pusherServer";
 
 export const createStory = async (story: {
   text: string;
@@ -23,6 +25,9 @@ export const createStory = async (story: {
       select: "firstName photo username",
     });
 
+    await pusherServer.trigger("stories", "new-story", storyToSend);
+
+    revalidatePath("/feed");
     return JSON.parse(JSON.stringify(storyToSend));
   } catch (error) {
     throw new Error("Could not create the story!");

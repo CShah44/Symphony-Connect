@@ -214,16 +214,18 @@ const Post = ({
             </button>
           )}
         </CardTitle>
-        <span className="text-neutral-300 text-xs my-2">
+        <span className="text-neutral-300 text-xs py-2">
           {formatDateTime(post.createdAt!).dateTime}
         </span>
         {post.type != "Post" && (
-          // todo  add event title field?
           <CardDescription className="my-2">
-            {post.type.toString() != "Post" ? post.type : ""}
+            {post.type.toString() === "Opportunity" ? "Opportunity" : ""}
             {post.type == "Event" && post.eventDate && (
-              <div className="text-md">
-                <span>{formatDateTime(post.eventDate!).dateTime}</span>
+              <div className="text-lg text-neutral-300 py-3">
+                <span>Event: {post.eventTitle}</span>
+                <span className="ml-4">
+                  {formatDateTime(post.eventDate!).dateTime}
+                </span>
               </div>
             )}
           </CardDescription>
@@ -268,9 +270,9 @@ const Post = ({
               <Heart width={16} height={16} />
             )}
           </Button>
-          <span className="text-xs sm:text-xl">{post.likes.length} Likes</span>
+          <span className="text-xs sm:text-lg">{post.likes.length} Likes</span>
           <CommentsContainer post={post} handleOnSubmit={handleAddComment} />
-          <span className="text-xs sm:text-xl">
+          <span className="text-xs sm:text-lg">
             {post.comments.length} Comments
           </span>
           <Button

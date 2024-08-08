@@ -18,24 +18,17 @@ import FileUploader from "./FileUploader";
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import { useToast } from "../ui/use-toast";
-import { useRouter } from "next/navigation";
 import { createStory } from "@/lib/actions/story.action";
-import { IStory } from "@/lib/database/models/story.model";
 
 const createStorySchema = z.object({
   text: z.string().max(200, "Your post should be of less than 200 characters"),
   images: z.any(),
 });
 
-const CreateStoryForm = ({
-  setStories,
-}: {
-  setStories: React.Dispatch<React.SetStateAction<IStory[]>>;
-}) => {
+const CreateStoryForm = () => {
   const { user } = useUser();
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const { toast } = useToast();
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof createStorySchema>>({
     resolver: zodResolver(createStorySchema),
@@ -46,7 +39,7 @@ const CreateStoryForm = ({
 
   async function onSubmit(values: z.infer<typeof createStorySchema>) {
     try {
-      const newStory = await createStory({
+      await createStory({
         text: values.text,
         id: user?.publicMetadata?.userId,
         imageUrls: imageUrls,
@@ -59,8 +52,6 @@ const CreateStoryForm = ({
         title: "POSTED!!!",
         description: "Story posted successfully.",
       });
-
-      setStories((prevStories) => [...prevStories, newStory]);
     } catch (error) {
       console.log(error);
       return toast({

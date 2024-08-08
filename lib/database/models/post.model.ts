@@ -16,6 +16,7 @@ export interface IPost extends Document {
   createdAt?: Date;
   updatedAt?: Date;
   eventDate?: Date;
+  eventTitle?: string;
 }
 
 export interface IPostFeed extends Document {
@@ -42,6 +43,7 @@ export interface IPostFeed extends Document {
   createdAt?: Date;
   updatedAt?: Date;
   eventDate?: Date;
+  eventTitle?: string;
 }
 
 export interface IComment {

@@ -50,23 +50,43 @@ const MusicProfileForm = ({
   currentUser: IUser | null;
 }) => {
   const router = useRouter();
+  const [onBoardedUser, setOnboardedUser] = useState<IUser | null>(currentUser);
   // const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let interval = null;
+
+    if (!onBoardedUser) {
+      interval = setInterval(async () => {
+        if (!onBoardedUser) {
+          const u = await getCurrentUser();
+          setOnboardedUser(u);
+        }
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, []);
 
   const form = useForm<z.infer<typeof EditMusicProfileSchema>>({
     resolver: zodResolver(EditMusicProfileSchema),
     defaultValues: {
-      genres: currentUser?.genres || [],
-      instruments: currentUser?.instruments || [],
-      skills: currentUser?.skills || [],
-      favoriteArtists: currentUser?.favoriteArtists || [],
-      bio: currentUser?.bio || "I dont know! I just crashed here!",
+      genres: onBoardedUser?.genres || [],
+      instruments: onBoardedUser?.instruments || [],
+      skills: onBoardedUser?.skills || [],
+      favoriteArtists: onBoardedUser?.favoriteArtists || [],
+      bio: onBoardedUser?.bio || "I dont know! I just crashed here!",
     },
   });
 
   async function onSubmit(data: z.infer<typeof EditMusicProfileSchema>) {
     const dataToSend = {
       ...data,
-      userId: currentUser?._id,
+      userId: onBoardedUser?._id,
     };
 
     try {
@@ -74,7 +94,10 @@ const MusicProfileForm = ({
       toast({
         title: "Profile updated successfully",
       });
-      router.push(`/user/${currentUser?._id}`);
+
+      if (onBoardedUser) {
+        router.push(`/user/${onBoardedUser._id}`);
+      }
     } catch (error) {
       console.log(error);
       toast({
@@ -300,7 +323,7 @@ const MusicProfileForm = ({
         <Button disabled={form.formState.isSubmitting} type="submit">
           {form.formState.isSubmitting ? "Submitting..." : "Submit"}
         </Button>
-        <p className="text-secondary-foreground text-sm">
+        <p className="text-muted-foreground text-sm">
           You can change this later
         </p>
       </form>

@@ -4,7 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { SignedIn, SignOutButton, useUser } from "@clerk/nextjs";
-import { Menu } from "lucide-react";
+import {
+  CirclePlus,
+  CircleUser,
+  Menu,
+  MessageCircle,
+  Newspaper,
+  UserRoundSearch,
+} from "lucide-react";
 import {
   Sheet,
   SheetClose,
@@ -16,7 +23,6 @@ import {
 import { Avatar, AvatarImage } from "./avatar";
 import { usePathname } from "next/navigation";
 
-// todo maybe hide the floating buttons for mobile
 export const FloatingNav = ({ className }: { className?: string }) => {
   const { user } = useUser();
   const pathname = usePathname();
@@ -27,14 +33,17 @@ export const FloatingNav = ({ className }: { className?: string }) => {
     {
       name: "Feed",
       link: "/feed",
+      icon: <Newspaper size={18} />,
     },
     {
       name: "Profile",
       link: `/user/${user?.publicMetadata.userId}`,
+      icon: <CircleUser size={18} />,
     },
     {
       name: "Discover People",
       link: "/discover",
+      icon: <UserRoundSearch size={18} />,
     },
   ];
 
@@ -57,19 +66,24 @@ export const FloatingNav = ({ className }: { className?: string }) => {
           className
         )}
       >
-        <Avatar className="mr-auto sm:col-span-1">
-          <AvatarImage className="hidden sm:block" src="/favicon.png" />
+        <Avatar className="sm:col-span-1">
+          <AvatarImage
+            className="hidden sm:block"
+            src="/favicon.png"
+            alt="icon"
+          />
         </Avatar>
-        <div className="hidden sm:flex sm:flex-row sm:gap-8 col-span-4 lg:col-span-3">
+        <div className="hidden sm:flex sm:flex-row sm:gap-8 col-span-4 lg:col-span-3 pr-5">
           {navItems.map((navItem: any, idx: number) => (
             <Link
               key={`link=${idx}`}
               href={navItem.link}
               className={cn(
-                "relative text-neutral-50 items-center flex space-x-2  hover:text-neutral-300 "
+                "relative text-neutral-50 items-center flex space-x-1 justify-center  hover:text-neutral-300 "
               )}
             >
-              <span className="block text-md sm:text-lg">{navItem.name}</span>
+              {navItem.icon}
+              <span className="block text-md">{navItem.name}</span>
             </Link>
           ))}
         </div>
@@ -101,9 +115,8 @@ export const FloatingNav = ({ className }: { className?: string }) => {
                       "relative text-neutral-50 items-center flex space-x-2  hover:text-neutral-300 "
                     )}
                   >
-                    <span className="block text-md sm:text-lg">
-                      {navItem.name}
-                    </span>
+                    {navItem.icon}
+                    <span className="block text-md ">{navItem.name}</span>
                   </Link>
                 ))}
                 <Link
@@ -112,9 +125,8 @@ export const FloatingNav = ({ className }: { className?: string }) => {
                     "relative text-neutral-50 items-center flex space-x-2  hover:text-neutral-300 "
                   )}
                 >
-                  <span className="block text-md sm:text-lg">
-                    Create a post
-                  </span>
+                  <CirclePlus size={18} />
+                  <span className="block text-md ">Create a post</span>
                 </Link>
                 <Link
                   href={"/chat"}
@@ -122,7 +134,8 @@ export const FloatingNav = ({ className }: { className?: string }) => {
                     "relative text-neutral-50 items-center flex space-x-2  hover:text-neutral-300 "
                   )}
                 >
-                  <span className="block text-md sm:text-lg">Chat</span>
+                  <MessageCircle size={18} />
+                  <span className="block text-md ">Chat</span>
                 </Link>
               </div>
               <SignedIn>

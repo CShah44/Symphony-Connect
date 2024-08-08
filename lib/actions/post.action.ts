@@ -6,6 +6,7 @@ import { connect } from "../database";
 import Post, { IPost, IPostFeed } from "../database/models/post.model";
 import User, { IUser } from "../database/models/user.model";
 import { recommendedPosts } from "./utility.action";
+import { UTApi } from "uploadthing/server";
 
 export async function createPost(post: {
   text: string;
@@ -83,6 +84,18 @@ export async function getPostById(id: string) {
 export async function deletePostById(postId: string) {
   try {
     await connect();
+    const utapi = new UTApi();
+
+    const post = await Post.findById(postId);
+
+    if (post.imageUrls.length > 0) {
+      await utapi.deleteFiles(
+        post.imageUrls.map((i: string) => {
+          return i.split("/").pop();
+        })
+      );
+    }
+
     await Post.findByIdAndDelete(postId);
 
     // revalidatePath("/feed");
