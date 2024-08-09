@@ -46,7 +46,7 @@ export default function Hero() {
         </motion.div>
         <motion.div
           variants={fadeInUpVariants}
-          className="font-extralight text-xl md:text-4xl text-neutral-200 py-4"
+          className="font-extralight text-xl md:text-4xl text-neutral-200 py-4 text-center"
         >
           The music community you've been looking for
         </motion.div>
