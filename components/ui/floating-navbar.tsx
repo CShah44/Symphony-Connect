@@ -22,13 +22,20 @@ import {
 } from "@/components/ui/sheet";
 import { Avatar, AvatarImage } from "./avatar";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export const FloatingNav = ({ className }: { className?: string }) => {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
+  const [currUser, setCurrUser] = useState<any>(null);
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (isLoaded) setCurrUser(user);
+  }, [isLoaded, user]);
 
   if (pathname.includes("sign-in") || pathname.includes("sign-up")) return null;
 
+  // todo profile link stays undefined do something to refetch the user
   const navItems = [
     {
       name: "Feed",
@@ -37,7 +44,7 @@ export const FloatingNav = ({ className }: { className?: string }) => {
     },
     {
       name: "Profile",
-      link: `/user/${user?.publicMetadata.userId}`,
+      link: `/user/${currUser?.publicMetadata.userId}`,
       icon: <CircleUser size={18} />,
     },
     {

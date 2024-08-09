@@ -40,6 +40,7 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
   const { user: currentUser, isLoaded } = useUser();
   const [isFollowing, setIsFollowing] = useState(false);
   const pathname = usePathname();
+  const [sendingJamRequest, setSendingJamRequest] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -81,6 +82,7 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
 
   const handleJamRequest = async () => {
     try {
+      setSendingJamRequest(true);
       await sendJamRequest(
         currentUser?.publicMetadata?.userId as string,
         user?._id || ""
@@ -97,6 +99,8 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
         description: "Something went wrong, please try again later",
         variant: "destructive",
       });
+    } finally {
+      setSendingJamRequest(false);
     }
   };
 
@@ -196,8 +200,12 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
               {isFollowing ? <UserX /> : <UserPlus />}
             </Button>
             <div className="flex gap-3 items-center">
-              <Button variant={"outline"} onClick={handleJamRequest}>
-                JAMM! request
+              <Button
+                disabled={sendingJamRequest}
+                variant={"outline"}
+                onClick={handleJamRequest}
+              >
+                {sendingJamRequest ? "Sending... " : "JAMM! request"}
               </Button>
               <Link href={`/chat/${user._id}?contact=true`}>
                 <Button variant="outline">

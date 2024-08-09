@@ -28,10 +28,13 @@ import {
 } from "../ui/carousel";
 import { Card, CardContent } from "../ui/card";
 import { pusherClient } from "@/lib/pusher/pusherClient";
+import { IUser } from "@/lib/database/models/user.model";
+import { getCurrentUser } from "@/lib/actions/user.action";
 
-export default function Stories({ currUserId }: { currUserId: string }) {
+export default function Stories() {
   const [showPostIcon, setShowPostIcon] = useState(true);
   const [stories, setStories] = useState<IStory[]>([]);
+  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,6 +43,12 @@ export default function Stories({ currUserId }: { currUserId: string }) {
       setStories(stories);
     };
 
+    const getTheUser = async () => {
+      const user = await getCurrentUser();
+      setCurrentUser(user);
+    };
+
+    getTheUser();
     fetchStories();
     setLoading(false);
   }, []);
@@ -47,10 +56,10 @@ export default function Stories({ currUserId }: { currUserId: string }) {
   useEffect(() => {
     if (stories.length === 0) return;
 
-    if (stories.some((story) => story.postedBy._id === currUserId)) {
+    if (stories.some((story) => story.postedBy._id === currentUser?._id)) {
       setShowPostIcon(false);
     }
-  }, [stories, currUserId]);
+  }, [stories, currentUser]);
 
   const handleDeleteStory = async (storyId: string) => {
     try {
@@ -159,7 +168,7 @@ export default function Stories({ currUserId }: { currUserId: string }) {
               </Carousel>
             )}
             <DialogFooter>
-              {currUserId === story.postedBy._id && (
+              {currentUser?._id === story.postedBy._id && (
                 <Button
                   variant="outline"
                   className="ml-auto"

@@ -109,7 +109,7 @@ export default function MessageContainer({
       router.replace("/chat");
       toast({
         title: "Conversation left!",
-        description: `You left the conversation: ${conversation.groupName}`,
+        description: `You left the conversation`,
         variant: "destructive",
       });
     } catch (error) {

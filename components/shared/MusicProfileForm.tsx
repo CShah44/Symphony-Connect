@@ -51,25 +51,26 @@ const MusicProfileForm = ({
 }) => {
   const router = useRouter();
   const [onBoardedUser, setOnboardedUser] = useState<IUser | null>(currentUser);
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let interval = null;
+    const getUser = async () => {
+      try {
+        const loggedInUser = await getCurrentUser();
 
-    if (!onBoardedUser) {
-      interval = setInterval(async () => {
-        if (!onBoardedUser) {
-          const u = await getCurrentUser();
-          setOnboardedUser(u);
-        }
-      }, 1000);
-    }
+        if (!loggedInUser) return;
 
-    return () => {
-      if (interval) {
-        clearInterval(interval);
+        setOnboardedUser(loggedInUser);
+      } catch (error) {
+        console.log("Could not get the user, maybe onboarding is not complete");
+      } finally {
+        setLoading(false);
       }
     };
+
+    if (!currentUser) {
+      setInterval(getUser, 500);
+    }
   }, []);
 
   const form = useForm<z.infer<typeof EditMusicProfileSchema>>({
@@ -99,7 +100,7 @@ const MusicProfileForm = ({
         router.push(`/user/${onBoardedUser._id}`);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast({
         title: "Error updating profile",
         description: "Something went wrong, please try again later",
@@ -107,6 +108,8 @@ const MusicProfileForm = ({
       });
     }
   }
+
+  if (loading) return <div>Loading Your Account</div>;
 
   return (
     <Form {...form}>
