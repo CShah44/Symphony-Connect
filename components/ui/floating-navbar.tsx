@@ -23,26 +23,17 @@ import {
 import { Avatar, AvatarImage } from "./avatar";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "@/lib/actions/user.action";
-import { IUser } from "@/lib/database/models/user.model";
 
 export const FloatingNav = ({ className }: { className?: string }) => {
   const pathname = usePathname();
-  const [user, setUser] = useState<IUser | null>(null);
+  const [data, setData] = useState<any>();
+  const { user, isLoaded } = useUser();
 
   useEffect(() => {
-    const getNewUser = async () => {
-      if (user) return;
-      try {
-        const newUser = await getCurrentUser();
-        setUser(newUser);
-      } catch (error) {
-        console.log("Could not get the user, maybe onboarding is not complete");
-      }
-    };
-
-    setTimeout(getNewUser, 500);
-  }, []);
+    if (user?.publicMetadata) {
+      setData(user?.publicMetadata);
+    }
+  }, [user, isLoaded]);
 
   if (
     pathname.includes("sign-in") ||
@@ -59,7 +50,7 @@ export const FloatingNav = ({ className }: { className?: string }) => {
     },
     {
       name: "Profile",
-      link: `/user/${user?._id}`,
+      link: `/user/${data?.userId}`,
       icon: <CircleUser size={18} />,
     },
     {

@@ -3,31 +3,20 @@
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/user.action";
 import { IUser } from "@/lib/database/models/user.model";
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const WelcomePage = () => {
-  const [user, setUser] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<any>(null);
+  const { user, isLoaded } = useUser();
 
   useEffect(() => {
-    const getNewUser = async () => {
-      if (user) {
-        return;
-      }
-      try {
-        const newUser = await getCurrentUser();
-        setUser(newUser);
-      } catch (error) {
-        console.log("Could not get the user, maybe onboarding is not complete");
-      }
-    };
-    setTimeout(getNewUser, 500);
-  }, []);
-
-  useEffect(() => {
-    if (user) setLoading(false);
-  }, [user]);
+    if (user?.publicMetadata) {
+      setData(user?.publicMetadata);
+    }
+  }, [user, isLoaded]);
 
   return (
     <div className="flex flex-col items-center justify-center font-agrandir mt-[180px]">
@@ -46,17 +35,17 @@ const WelcomePage = () => {
         Please wait while we set up your account. You will be redirected to the
         onboarding page once your account is ready.
       </p>
-      {loading && <div>Loading...</div>}
-      {user && <div>User: {user.username}</div>}
-      {user && (
+      {data ? (
         <div className="space-x-4 p-5">
           <Link href="/user/edit">
             <Button variant={"default"}>Complete Onboarding</Button>
           </Link>
-          <Link href="/feed">
+          <Link href={`/user/${data?.userId}`}>
             <Button variant={"outline"}>Skip Onboarding</Button>
           </Link>
         </div>
+      ) : (
+        <div>Loading...</div>
       )}
     </div>
   );
