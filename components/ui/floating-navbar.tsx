@@ -29,7 +29,6 @@ import { IUser } from "@/lib/database/models/user.model";
 export const FloatingNav = ({ className }: { className?: string }) => {
   const pathname = usePathname();
   const [user, setUser] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getNewUser = async () => {
@@ -45,11 +44,12 @@ export const FloatingNav = ({ className }: { className?: string }) => {
     setTimeout(getNewUser, 500);
   }, []);
 
-  useEffect(() => {
-    if (user) setLoading(false);
-  }, [user]);
-
-  if (pathname.includes("sign-in") || pathname.includes("sign-up")) return null;
+  if (
+    pathname.includes("sign-in") ||
+    pathname.includes("sign-up") ||
+    pathname.includes("welcome")
+  )
+    return null;
 
   const navItems = [
     {
@@ -57,13 +57,11 @@ export const FloatingNav = ({ className }: { className?: string }) => {
       link: "/feed",
       icon: <Newspaper size={18} />,
     },
-    loading
-      ? null
-      : {
-          name: "Profile",
-          link: `/user/${user?._id}`,
-          icon: <CircleUser size={18} />,
-        },
+    {
+      name: "Profile",
+      link: `/user/${user?._id}`,
+      icon: <CircleUser size={18} />,
+    },
     {
       name: "Discover People",
       link: "/discover",
@@ -98,21 +96,18 @@ export const FloatingNav = ({ className }: { className?: string }) => {
           />
         </Avatar>
         <div className="hidden sm:flex sm:flex-row sm:gap-8 col-span-4 lg:col-span-3 pr-5">
-          {navItems.map((navItem: any, idx: number) => {
-            if (!navItem) return null;
-            return (
-              <Link
-                key={`link=${idx}`}
-                href={navItem.link}
-                className={cn(
-                  "relative text-neutral-50 items-center flex space-x-1 justify-center  hover:text-neutral-300 "
-                )}
-              >
-                {navItem.icon}
-                <span className="block text-md">{navItem.name}</span>
-              </Link>
-            );
-          })}
+          {navItems.map((navItem: any, idx: number) => (
+            <Link
+              key={`link=${idx}`}
+              href={navItem.link}
+              className={cn(
+                "relative text-neutral-50 items-center flex space-x-1 justify-center  hover:text-neutral-300 "
+              )}
+            >
+              {navItem.icon}
+              <span className="block text-md">{navItem.name}</span>
+            </Link>
+          ))}
         </div>
         <div className="hidden lg:flex lg:flex-row lg:gap-4 col-span-1">
           <SignedIn>
