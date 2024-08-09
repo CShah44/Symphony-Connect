@@ -76,6 +76,7 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
         title: "Error following/unfollowing",
         description: "Something went wrong, please try again later",
         variant: "destructive",
+        duration: 2000,
       });
     }
   };
@@ -92,12 +93,14 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
         title: "JAM request sent",
         description: `You've sent a JAM request to ${user?.firstName}`,
         variant: "default",
+        duration: 1000,
       });
     } catch (error) {
       toast({
         title: "Error sending JAM request",
         description: "Something went wrong, please try again later",
         variant: "destructive",
+        duration: 2000,
       });
     } finally {
       setSendingJamRequest(false);

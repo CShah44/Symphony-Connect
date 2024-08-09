@@ -1,39 +1,56 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, stagger } from "framer-motion";
 import React from "react";
 import { AuroraBackground } from "../ui/aurora-background";
 import Link from "next/link";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 export default function Hero() {
+  const fadeInUpVariants = {
+    initial: {
+      opacity: 0,
+      y: 50,
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 1,
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
   return (
     <AuroraBackground>
       <motion.div
-        initial={{ opacity: 0.0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: 0.3,
-          duration: 0.8,
-          ease: "easeInOut",
-        }}
+        initial="initial"
+        whileInView="show"
+        variants={fadeInUpVariants}
         className="relative flex flex-col gap-4 items-center justify-center px-4 font-agrandir"
       >
-        <div className="font-extralight text-2xl md:text-4xl text-neutral-200 py-4">
+        <motion.div
+          variants={fadeInUpVariants}
+          className="font-extralight text-2xl md:text-4xl text-neutral-200 py-4"
+        >
           Welcome to
-        </div>
-        <div>
+        </motion.div>
+        <motion.div variants={fadeInUpVariants}>
           <div className="font-melodrama text-7xl md:text-9xl font-bold text-zinc-100 text-center">
             SYMPHONY
           </div>
           <div className="font-melodrama text-6xl md:text-7xl font-bold text-zinc-100 text-center">
             CONNECT
           </div>
-        </div>
-        <div className="font-extralight text-xl md:text-4xl text-neutral-200 py-4">
+        </motion.div>
+        <motion.div
+          variants={fadeInUpVariants}
+          className="font-extralight text-xl md:text-4xl text-neutral-200 py-4"
+        >
           The music community you've been looking for
-        </div>
-        <div className="flex gap-4">
+        </motion.div>
+        <motion.div variants={fadeInUpVariants} className="flex gap-4">
           <SignedIn>
             <Link href="/feed">
               <button className="bg-neutral-200 hover:bg-neutral-400 rounded-full w-[200px] text-black px-4 py-2">
@@ -53,7 +70,7 @@ export default function Hero() {
               </button>
             </Link>
           </SignedOut>
-        </div>
+        </motion.div>
       </motion.div>
     </AuroraBackground>
   );

@@ -73,14 +73,17 @@ const MusicProfileForm = ({
       await updateMusicProfile(dataToSend);
       toast({
         title: "Profile updated successfully",
+        description:
+          "Your profile has been updated successfully and you will be redirected to your profile page",
+        duration: 5000,
       });
       router.push(`/user/${currentUser?._id}`);
     } catch (error) {
-      console.log(error);
       toast({
         title: "Error updating profile",
         description: "Something went wrong, please try again later",
         variant: "destructive",
+        duration: 3000,
       });
     }
   }

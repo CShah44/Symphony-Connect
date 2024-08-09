@@ -9,6 +9,7 @@ import Conversation, {
   IParticipant,
 } from "../database/models/conversation.model";
 import Post from "../database/models/post.model";
+import { Story } from "../database/models/story.model";
 
 export async function getUserById(userId: any) {
   try {
@@ -166,6 +167,8 @@ export async function deleteUser(clerkId: string) {
 
     // delete all the posts of the user
     await Post.deleteMany({ postedBy: userId });
+    // delete all the stories of the user
+    await Story.deleteMany({ postedBy: userId });
 
     // find all conversations user is a part of and delete his id from participants
     const conversations = await Conversation.find({ participants: userId });
@@ -232,7 +235,6 @@ export async function followUnfollow(userId: any, userTarget: any) {
       JSON.stringify({ message: "Followed/Unfollowed successfully" })
     );
   } catch (error) {
-    console.log(error);
     throw new Error("Could not follow/unfollow the user!");
   }
 }

@@ -70,9 +70,6 @@ export async function POST(req: Request) {
       username: username!,
     };
 
-    console.log(evt.data);
-    console.log(user);
-
     const newUser = await createUser(user);
 
     if (newUser) {

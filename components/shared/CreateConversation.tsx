@@ -67,13 +67,14 @@ export default function CreateConversation({
       toast({
         title: "Conversation created!",
         description: "Conversation created successfully.",
+        duration: 1000,
       });
     } catch (error) {
-      console.log(error);
       return toast({
         title: "Oops!",
         description: "Could not create conversation! Try again later.",
         variant: "destructive",
+        duration: 2000,
       });
     }
   }

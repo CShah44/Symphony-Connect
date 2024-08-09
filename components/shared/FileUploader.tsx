@@ -52,6 +52,7 @@ export default function FileUploader({
             setImageUrls(urls);
             toast({
               title: "Images Uploaded!",
+              duration: 1000,
             });
           }}
           onUploadError={(error: Error) => {
@@ -59,6 +60,7 @@ export default function FileUploader({
               title: "Error uploading images",
               description: "Couldn't upload images, check the file size once",
               variant: "destructive",
+              duration: 2000,
             });
           }}
         />

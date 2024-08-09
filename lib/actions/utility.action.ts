@@ -66,7 +66,6 @@ export async function calculateProfileMatch(user1: IUser, user2: IUser) {
 
     return JSON.parse(JSON.stringify(score));
   } catch (error) {
-    console.log(error);
     throw new Error("Error calculating profile match");
   }
 }
@@ -91,7 +90,6 @@ export async function generateSimilarityScore(
 
     return JSON.parse(JSON.stringify(score));
   } catch (error) {
-    console.log(error);
     throw new Error("Error calculating profile match");
   }
 }
@@ -147,7 +145,6 @@ export const generateTextFromImage = async (imageUrl: string) => {
 
     return JSON.parse(JSON.stringify(text));
   } catch (error) {
-    console.log(error);
     throw new Error("Could not generate text from image!");
   }
 };

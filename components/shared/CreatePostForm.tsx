@@ -72,15 +72,16 @@ const CreatePostForm = () => {
       toast({
         title: "POSTED!!!",
         description: "Post created successfully.",
+        duration: 1000,
       });
 
       router.push("/feed");
     } catch (error) {
-      console.log(error);
       return toast({
         title: "Oops!",
         description: "Could not post! Try again later.",
         variant: "destructive",
+        duration: 2000,
       });
     }
   }

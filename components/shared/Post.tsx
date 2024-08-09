@@ -131,6 +131,7 @@ const Post = ({
       toast({
         title: "Please enter a comment",
         variant: "destructive",
+        duration: 2000,
       });
     }
 
@@ -145,12 +146,14 @@ const Post = ({
       toast({
         title: "Reposted!",
         description: "Post reposted successfully.",
+        duration: 1000,
       });
     } catch (error) {
       toast({
         title: "Oops!",
         description: "Could not repost the post!",
         variant: "destructive",
+        duration: 2000,
       });
     }
   };
@@ -163,12 +166,14 @@ const Post = ({
       toast({
         title: "Deleted!",
         description: "Post deleted successfully.",
+        duration: 1000,
       });
     } catch (error) {
       toast({
         title: "Oops!",
         description: "Could not delete the post!",
         variant: "destructive",
+        duration: 2000,
       });
     }
   };

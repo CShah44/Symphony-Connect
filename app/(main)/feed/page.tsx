@@ -4,7 +4,12 @@ import RecommendedUsers from "@/components/shared/RecommendedUsers";
 import Stories from "@/components/shared/Stories";
 import { Button } from "@/components/ui/button";
 import { getPosts } from "@/lib/actions/post.action";
-import { CirclePlus, MessageSquare, TrendingUp } from "lucide-react";
+import {
+  CirclePlus,
+  MessageSquare,
+  TrendingUp,
+  UserRoundSearch,
+} from "lucide-react";
 import Link from "next/link";
 
 const Feed = async () => {
@@ -12,11 +17,16 @@ const Feed = async () => {
 
   return (
     <>
-      <div className="lg:hidden block">
+      <div className="lg:hidden flex flex-row justify-between px-5">
         <Link href="/feed/trending">
           <Button className="flex gap-3 mx-auto" variant={"outline"}>
             See What's Trending
             <TrendingUp size={28} strokeWidth={3} />
+          </Button>
+        </Link>
+        <Link href="/chat">
+          <Button className="flex gap-3 mx-auto" variant={"ghost"}>
+            <MessageSquare size={28} strokeWidth={3} />
           </Button>
         </Link>
       </div>

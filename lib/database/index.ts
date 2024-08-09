@@ -35,7 +35,5 @@ export const connect = async () => {
 
   cached.connection = await cached.promise;
 
-  console.log("MongoDB connected!");
-
   return cached.connection;
 };

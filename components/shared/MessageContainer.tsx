@@ -63,6 +63,7 @@ export default function MessageContainer({
         title: "Oops!",
         description: "Could not send message! Try again later.",
         variant: "destructive",
+        duration: 2000,
       });
     }
   }
@@ -111,12 +112,14 @@ export default function MessageContainer({
         title: "Conversation left!",
         description: `You left the conversation`,
         variant: "destructive",
+        duration: 2000,
       });
     } catch (error) {
       toast({
         title: "Oops!",
         description: "Could not leave conversation! Try again later.",
         variant: "destructive",
+        duration: 2000,
       });
     }
   };

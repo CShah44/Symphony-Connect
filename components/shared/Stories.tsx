@@ -72,13 +72,14 @@ export default function Stories() {
       toast({
         title: "Deleted Story",
         description: "Story deleted successfully.",
+        duration: 1000,
       });
     } catch (error) {
-      console.log(error);
       return toast({
         title: "Oops!",
         description: "Could not delete the story!",
         variant: "destructive",
+        duration: 2000,
       });
     }
   };
@@ -92,7 +93,7 @@ export default function Stories() {
     return () => {
       pusherClient.unsubscribe("stories");
     };
-  });
+  }, []);
 
   if (loading) return <Skeleton className="w-11/12 mx-auto mt-4" />;
 

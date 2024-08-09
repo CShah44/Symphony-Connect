@@ -177,7 +177,6 @@ export const sendMessage = async (
 
     return JSON.parse(JSON.stringify(populatedMessage));
   } catch (error) {
-    console.log(error);
     throw new Error("Could not send the message in database");
   }
 };
@@ -203,7 +202,6 @@ export const verifyContact = async (userId: string, otherUserId: string) => {
 
     return JSON.parse(JSON.stringify(conversation));
   } catch (error) {
-    console.log(error);
     throw new Error("Could not check if conversation exists in database");
   }
 };
@@ -239,7 +237,6 @@ export const sendJamRequest = async (userId: string, otherUserId: string) => {
 
     return JSON.parse(JSON.stringify({ message: "JAMM! request sent" }));
   } catch (error) {
-    console.log(error);
     throw new Error("Could not send the JAM request in database");
   }
 };
@@ -254,7 +251,6 @@ export const deleteGroup = async (conversationId: string) => {
     revalidatePath("/chat");
     return JSON.parse(JSON.stringify({ message: "Group deleted" }));
   } catch (error) {
-    console.log(error);
     throw new Error("Could not delete the group in database");
   }
 };

@@ -31,7 +31,6 @@ export async function createPost(post: {
     revalidatePath("/feed");
     return JSON.parse(JSON.stringify(newPost));
   } catch (error) {
-    console.log(error);
     throw new Error("Could not post");
   }
 }
@@ -56,7 +55,6 @@ export async function getPosts() {
 
     return JSON.parse(JSON.stringify(recommendations));
   } catch (error) {
-    console.log(error);
     throw new Error("Could not fetch the posts!");
   }
 }

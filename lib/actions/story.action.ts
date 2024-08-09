@@ -27,7 +27,6 @@ export const createStory = async (story: {
 
     await pusherServer.trigger("stories", "new-story", storyToSend);
 
-    revalidatePath("/feed");
     return JSON.parse(JSON.stringify(storyToSend));
   } catch (error) {
     throw new Error("Could not create the story!");

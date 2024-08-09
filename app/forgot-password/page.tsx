@@ -66,8 +66,6 @@ const ForgotPasswordPage: NextPage = () => {
           // the newly created session (user is now signed in)
           setActive({ session: result.createdSessionId });
           setError("");
-        } else {
-          console.log(result);
         }
       })
       .catch((err) => {
