@@ -121,10 +121,10 @@ const ProfileCard = ({ userProps }: { userProps: IUser | null }) => {
           />
         </Link>
         <div>
-          <CardTitle className="tracking-wide">
+          <CardTitle className="tracking-wide text-md md:text-2xl">
             {user.firstName} {user.lastName}
           </CardTitle>
-          <CardDescription className="text-md">
+          <CardDescription className="text-xs sm:text-lg">
             <Link href={`/user/${user._id}`}>{user.username}</Link>
           </CardDescription>
           {(user.instruments.length > 0 || user.skills.length > 0) && (

@@ -18,14 +18,12 @@ type OnBoardData = {
   favoriteArtists: string[];
 };
 
-const EditProfile = async (params: { searchParams: { onboard: boolean } }) => {
+const EditProfile = async () => {
   const data: OnBoardData = await getOnboardData();
 
   const metadata = auth()!.sessionClaims!.public_metadata;
   const isOnboarded = metadata.onboarded || false;
-  const dbUser: IUser | null = params.searchParams.onboard
-    ? null
-    : await getUserById(metadata.userId);
+  const dbUser: IUser | null = await getUserById(metadata.userId);
 
   if (!isOnboarded) changeOnboardingStatus(true);
 

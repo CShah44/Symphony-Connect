@@ -9,7 +9,7 @@ import {
 const ProfileMatchStat = ({ data }: { data?: number }) => {
   if (!data) return null;
 
-  const circumference = 20 * 2 * Math.PI;
+  const circumference = 15 * 2 * Math.PI;
   const offset = circumference - (data / 100) * circumference;
 
   return (
@@ -24,7 +24,7 @@ const ProfileMatchStat = ({ data }: { data?: number }) => {
                 strokeWidth="5"
                 stroke="currentColor"
                 fill="transparent"
-                r="20"
+                r="15"
                 cx="50%"
                 cy="50%"
               />
@@ -36,7 +36,7 @@ const ProfileMatchStat = ({ data }: { data?: number }) => {
                 strokeLinecap="round"
                 stroke="currentColor"
                 fill="transparent"
-                r="20"
+                r="15"
                 cx="50%"
                 cy="50%"
               />

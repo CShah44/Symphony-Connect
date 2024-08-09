@@ -50,44 +50,23 @@ const MusicProfileForm = ({
   currentUser: IUser | null;
 }) => {
   const router = useRouter();
-  const [onBoardedUser, setOnboardedUser] = useState<IUser | null>(currentUser);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const loggedInUser = await getCurrentUser();
-
-        if (!loggedInUser) return;
-
-        setOnboardedUser(loggedInUser);
-      } catch (error) {
-        console.log("Could not get the user, maybe onboarding is not complete");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (!currentUser) {
-      setInterval(getUser, 500);
-    }
-  }, []);
+  // const [loading, setLoading] = useState(true);
 
   const form = useForm<z.infer<typeof EditMusicProfileSchema>>({
     resolver: zodResolver(EditMusicProfileSchema),
     defaultValues: {
-      genres: onBoardedUser?.genres || [],
-      instruments: onBoardedUser?.instruments || [],
-      skills: onBoardedUser?.skills || [],
-      favoriteArtists: onBoardedUser?.favoriteArtists || [],
-      bio: onBoardedUser?.bio || "I dont know! I just crashed here!",
+      genres: currentUser?.genres || [],
+      instruments: currentUser?.instruments || [],
+      skills: currentUser?.skills || [],
+      favoriteArtists: currentUser?.favoriteArtists || [],
+      bio: currentUser?.bio || "I dont know! I just crashed here!",
     },
   });
 
   async function onSubmit(data: z.infer<typeof EditMusicProfileSchema>) {
     const dataToSend = {
       ...data,
-      userId: onBoardedUser?._id,
+      userId: currentUser?._id,
     };
 
     try {
@@ -95,12 +74,9 @@ const MusicProfileForm = ({
       toast({
         title: "Profile updated successfully",
       });
-
-      if (onBoardedUser) {
-        router.push(`/user/${onBoardedUser._id}`);
-      }
+      router.push(`/user/${currentUser?._id}`);
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       toast({
         title: "Error updating profile",
         description: "Something went wrong, please try again later",
@@ -108,8 +84,6 @@ const MusicProfileForm = ({
       });
     }
   }
-
-  if (loading) return <div>Loading Your Account</div>;
 
   return (
     <Form {...form}>
@@ -326,7 +300,7 @@ const MusicProfileForm = ({
         <Button disabled={form.formState.isSubmitting} type="submit">
           {form.formState.isSubmitting ? "Submitting..." : "Submit"}
         </Button>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-secondary-foreground text-sm">
           You can change this later
         </p>
       </form>
