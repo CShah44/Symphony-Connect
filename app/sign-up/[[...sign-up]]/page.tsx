@@ -15,18 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { AuroraBackground } from "@/components/ui/aurora-background";
-import { useEffect } from "react";
-import { connect } from "@/lib/database";
 
 export default function SignUpPage() {
-  useEffect(() => {
-    const initateDBTrick = async () => {
-      await connect();
-    };
-
-    initateDBTrick();
-  }, []);
-
   return (
     <AuroraBackground>
       <div className="flex min-h-[90dvh] w-11/12 z-[100]">

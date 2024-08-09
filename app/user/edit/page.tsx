@@ -8,7 +8,7 @@ import MusicProfileForm from "@/components/shared/MusicProfileForm";
 import { auth } from "@clerk/nextjs/server";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUserById } from "@/lib/actions/user.action";
+import { getCurrentUser } from "@/lib/actions/user.action";
 import { IUser } from "@/lib/database/models/user.model";
 
 type OnBoardData = {
@@ -23,7 +23,7 @@ const EditProfile = async () => {
 
   const metadata = auth()!.sessionClaims!.public_metadata;
   const isOnboarded = metadata.onboarded || false;
-  const dbUser: IUser | null = await getUserById(metadata.userId);
+  const dbUser: IUser | null = await getCurrentUser();
 
   if (!isOnboarded) changeOnboardingStatus(true);
 

@@ -12,17 +12,17 @@ const WelcomePage = () => {
 
   useEffect(() => {
     const getNewUser = async () => {
-      if (user) return;
+      if (user) {
+        setLoading(false);
+        return;
+      }
       try {
         const newUser = await getCurrentUser();
         setUser(newUser);
       } catch (error) {
         console.log("Could not get the user, maybe onboarding is not complete");
-      } finally {
-        setLoading(false);
       }
     };
-
     setTimeout(getNewUser, 500);
   }, []);
 
