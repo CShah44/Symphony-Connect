@@ -29,6 +29,7 @@ import { IUser } from "@/lib/database/models/user.model";
 export const FloatingNav = ({ className }: { className?: string }) => {
   const pathname = usePathname();
   const [user, setUser] = useState<IUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getNewUser = async () => {
@@ -44,20 +45,25 @@ export const FloatingNav = ({ className }: { className?: string }) => {
     setTimeout(getNewUser, 500);
   }, []);
 
+  useEffect(() => {
+    if (user) setLoading(false);
+  }, [user]);
+
   if (pathname.includes("sign-in") || pathname.includes("sign-up")) return null;
 
-  // todo profile link stays undefined do something to refetch the user
   const navItems = [
     {
       name: "Feed",
       link: "/feed",
       icon: <Newspaper size={18} />,
     },
-    {
-      name: "Profile",
-      link: `/user/${user?._id}`,
-      icon: <CircleUser size={18} />,
-    },
+    loading
+      ? null
+      : {
+          name: "Profile",
+          link: `/user/${user?._id}`,
+          icon: <CircleUser size={18} />,
+        },
     {
       name: "Discover People",
       link: "/discover",

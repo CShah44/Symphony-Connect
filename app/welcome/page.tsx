@@ -13,7 +13,6 @@ const WelcomePage = () => {
   useEffect(() => {
     const getNewUser = async () => {
       if (user) {
-        setLoading(false);
         return;
       }
       try {
@@ -25,6 +24,10 @@ const WelcomePage = () => {
     };
     setTimeout(getNewUser, 500);
   }, []);
+
+  useEffect(() => {
+    if (user) setLoading(false);
+  }, [user]);
 
   return (
     <div className="flex flex-col items-center justify-center font-agrandir mt-[180px]">
