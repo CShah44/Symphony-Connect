@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { motion, stagger } from "framer-motion";
+import { motion } from "framer-motion";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { useRouter } from "next/navigation";
 
@@ -16,7 +16,10 @@ const WelcomePage = () => {
   useEffect(() => {
     if (user?.publicMetadata) {
       setData(user?.publicMetadata);
-      router.refresh();
+    } else {
+      setInterval(() => {
+        router.refresh();
+      }, 4000);
     }
   }, [user, isLoaded]);
 
@@ -41,7 +44,7 @@ const WelcomePage = () => {
         initial="hidden"
         animate="show"
         variants={fadeInUpVariants}
-        className="flex flex-col items-center justify-center font-agrandir mt-[140px] z-[100] text-neutral-100"
+        className="flex flex-col items-center justify-center font-agrandir mt-[100px] z-[100] text-neutral-100"
       >
         <motion.h1
           variants={fadeInUpVariants}
