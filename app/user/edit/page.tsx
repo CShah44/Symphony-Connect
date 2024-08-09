@@ -8,7 +8,10 @@ import MusicProfileForm from "@/components/shared/MusicProfileForm";
 import { auth } from "@clerk/nextjs/server";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getCurrentUser } from "@/lib/actions/user.action";
+import {
+  getCurrentUser,
+  getDefaultMusicProfile,
+} from "@/lib/actions/user.action";
 import { IUser } from "@/lib/database/models/user.model";
 
 type OnBoardData = {
@@ -20,10 +23,10 @@ type OnBoardData = {
 
 const EditProfile = async () => {
   const data: OnBoardData = await getOnboardData();
+  const defaultData = await getDefaultMusicProfile();
 
   const metadata = auth()!.sessionClaims!.public_metadata;
   const isOnboarded = metadata.onboarded || false;
-  const dbUser: IUser | null = await getCurrentUser();
 
   if (!isOnboarded) changeOnboardingStatus(true);
 
@@ -36,7 +39,7 @@ const EditProfile = async () => {
             <Button variant={"link"}>Go to account settings</Button>
           </Link>
         </div>
-        <MusicProfileForm data={data} currentUser={dbUser} />
+        <MusicProfileForm data={data} defaultData={defaultData} />
         <br />
       </div>
     </Suspense>

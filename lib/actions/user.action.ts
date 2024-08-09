@@ -250,3 +250,24 @@ export async function getCurrentUser() {
     throw new Error("Could not get the user in database");
   }
 }
+
+export async function getDefaultMusicProfile() {
+  try {
+    await connect();
+    const user: IUser | null = await User.findById(
+      auth().sessionClaims?.public_metadata?.userId
+    );
+
+    const values = {
+      genres: user?.genres || [],
+      instruments: user?.instruments || [],
+      skills: user?.skills || [],
+      favoriteArtists: user?.favoriteArtists || [],
+      bio: user?.bio || "I dont know! I just crashed here!",
+    };
+
+    return JSON.parse(JSON.stringify(values));
+  } catch (error) {
+    throw new Error("Could not get the user in database");
+  }
+}

@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
   getCurrentUser,
+  getDefaultMusicProfile,
   getUserById,
   updateMusicProfile,
 } from "@/lib/actions/user.action";
@@ -24,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { IUser } from "@/lib/database/models/user.model";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
+import { Skeleton } from "../ui/skeleton";
 
 const EditMusicProfileSchema = z.object({
   genres: z.array(z.string()),
@@ -39,7 +41,7 @@ const EditMusicProfileSchema = z.object({
 
 const MusicProfileForm = ({
   data,
-  currentUser,
+  defaultData,
 }: {
   data: {
     genres: string[];
@@ -47,26 +49,48 @@ const MusicProfileForm = ({
     skills: string[];
     favoriteArtists: string[];
   };
-  currentUser: IUser | null;
+  defaultData: {
+    genres: string[];
+    instruments: string[];
+    skills: string[];
+    favoriteArtists: string[];
+    bio: string;
+  };
 }) => {
   const router = useRouter();
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<IUser | null>(null);
+
+  useEffect(() => {
+    const getTheUser = async () => {
+      const user = await getCurrentUser();
+
+      if (user) {
+        setCurrentUser(user);
+        setLoading(false);
+      } else {
+        console.log("User not found");
+      }
+    };
+
+    getTheUser();
+  }, []);
 
   const form = useForm<z.infer<typeof EditMusicProfileSchema>>({
     resolver: zodResolver(EditMusicProfileSchema),
-    defaultValues: {
-      genres: currentUser?.genres || [],
-      instruments: currentUser?.instruments || [],
-      skills: currentUser?.skills || [],
-      favoriteArtists: currentUser?.favoriteArtists || [],
-      bio: currentUser?.bio || "I dont know! I just crashed here!",
-    },
+    defaultValues: defaultData,
   });
 
   async function onSubmit(data: z.infer<typeof EditMusicProfileSchema>) {
+    let temp;
+
+    if (!currentUser) {
+      temp = await getCurrentUser();
+    }
+
     const dataToSend = {
       ...data,
-      userId: currentUser?._id,
+      userId: currentUser?._id || temp._id,
     };
 
     try {
@@ -87,6 +111,8 @@ const MusicProfileForm = ({
       });
     }
   }
+
+  if (loading) return <Skeleton className="w-11/12 md:w-[650px] h-[]" />;
 
   return (
     <Form {...form}>
