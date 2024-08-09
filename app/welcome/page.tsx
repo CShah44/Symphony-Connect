@@ -81,10 +81,12 @@ const WelcomePage = () => {
         {data?.userId && (
           <motion.div variants={fadeInUpVariants} className="space-x-4 p-5">
             <Link href="/user/edit">
-              <Button variant={"default"}>Complete Onboarding</Button>
+              <Button variant={"default"}>
+                Complete Setting Up Your Profile
+              </Button>
             </Link>
             <Link href={`/user/${data?.userId}`}>
-              <Button variant={"outline"}>Skip Onboarding</Button>
+              <Button variant={"outline"}>Skip for now</Button>
             </Link>
           </motion.div>
         )}
