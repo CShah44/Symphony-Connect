@@ -98,18 +98,21 @@ export const FloatingNav = ({ className }: { className?: string }) => {
           />
         </Avatar>
         <div className="hidden sm:flex sm:flex-row sm:gap-8 col-span-4 lg:col-span-3 pr-5">
-          {navItems.map((navItem: any, idx: number) => (
-            <Link
-              key={`link=${idx}`}
-              href={navItem.link}
-              className={cn(
-                "relative text-neutral-50 items-center flex space-x-1 justify-center  hover:text-neutral-300 "
-              )}
-            >
-              {navItem.icon}
-              <span className="block text-md">{navItem.name}</span>
-            </Link>
-          ))}
+          {navItems.map((navItem: any, idx: number) => {
+            if (!navItem) return null;
+            return (
+              <Link
+                key={`link=${idx}`}
+                href={navItem.link}
+                className={cn(
+                  "relative text-neutral-50 items-center flex space-x-1 justify-center  hover:text-neutral-300 "
+                )}
+              >
+                {navItem.icon}
+                <span className="block text-md">{navItem.name}</span>
+              </Link>
+            );
+          })}
         </div>
         <div className="hidden lg:flex lg:flex-row lg:gap-4 col-span-1">
           <SignedIn>
