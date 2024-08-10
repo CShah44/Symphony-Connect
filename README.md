@@ -76,9 +76,9 @@ This is the biggest challenge faced in this application since it invloves using 
 
 A simple looking yet pretty tricky to implement feature of this app which was done through profile matching using ML Models of HuggingFace. It also invloves searching, and profile matching.
 
-#### Multiple File Upload
+#### 3. Multiple File Upload
 
-A greate feature that makes this app stand out. It was quite difficult to implement this feature, given the no. of resources available to do so.
+One of the features that makes this app stand out. It was quite difficult to implement this feature, given the no. of resources available to do so.
 
 #### 4. Admin Dashboard
 
@@ -92,9 +92,9 @@ An instagram story like feature that lets users post a story which is automatica
 
 One of the most important feature of the app, that lets users interact with each other with a click of a button through any user's profile page. The app also provides for the users to form groups with their followers. The realtime functionality was achieved through pusher. This was also expanded upon to send special Jam request with the click of a button which lets any user sent a Jam request to others with an auto generated message.
 
-## Documentation
+#### 7. Role based access system
 
-[Documentation](https://linktodocumentation)
+One of the advanced features for any web application. This was made very easy through Clerk and their documentation which would otherwise have required much more time and effort to achieve
 
 ## Run Locally
 
@@ -151,3 +151,21 @@ To run this project, you will need to add the following environment variables to
 `PUSHER_APP_SECRET`: From pusher after creating the app.
 
 `HF_TOKEN`: The generated token from hugging face
+
+## Further Improvements/Features
+
+- Searching through posts.
+- Being able to actually host events on the app (similar to unstop)
+- Allowing users to post vidoes of their work. (which requires more storage than what most free tier offer, ie, 2GB for uploadthing)
+- Users can search through their selected tags
+- Connecting user's spotify account and fetching data from spotify api to build a better music profile and suggestion system
+
+## Documentation about how I implemented certain features
+
+[Documentation](https://1drv.ms/w/s!AjEYjNI8O0WhjjNdacZr8pMSy58d)
+
+### Note
+
+The initial page might take a few seconds to load. After the sign up page, you will be shown loading screen before onboarding which takes quite sometime since MongoDB database is not connected to the server and hence webhooks call can not be completed quickly. Consider reloading the welcome page (if it take more than ~15-20s) so that the "complete onboarding" button appears. I tried my best to lower the load time.
+
+#### Made with ❤️ by [Chaitya Shah](https://github.com/CShah44) for Zense-IIITB recruitment 2024
